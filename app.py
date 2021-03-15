@@ -59,16 +59,18 @@ def alice_webhook():
                     bot.send_video(chat_id, document=answer[1])
 
         if "voice" in data["message"]:
-            r = sr.Recognizer()
+            # r = sr.Recognizer()
 
-            file_info = bot.get_file(data["message"]["voice"]["file_id"])
-            downloaded_file = bot.download_file(file_info.file_path)
+            # file_info = bot.get_file(data["message"]["voice"]["file_id"])
+            # downloaded_file = bot.download_file(file_info.file_path)
 
-            try:
-                transc = r.recognize_google(downloaded_file)
-                bot.send_message(chat_id, transc)
-            except Exception:
-                bot.send_message(chat_id, "Não consegui reconhecer.")
+            bot.send_message(chat_id, "Poxa, sinto muito. Ainda não sei reconhecer áudios.")
+
+            # try:
+            #     transc = r.recognize_google(downloaded_file)
+            #     bot.send_message(chat_id, transc)
+            # except Exception:
+            #     bot.send_message(chat_id, "Não consegui reconhecer.")
             # bot.send_voice(chat_id, downloaded_file)
     except Exception as e:
         bot.send_message(ADMIN_USER_ID, str(e))
