@@ -71,7 +71,7 @@ def alice_webhook():
                 bot.send_message(chat_id, "Não consegui reconhecer.")
             # bot.send_voice(chat_id, downloaded_file)
     except Exception as e:
-        bot.send_message(776904183, str(e))
+        bot.send_message(ADMIN_USER_ID, str(e))
 
     alice.user_id = None
     return {"status": 200}
