@@ -9,7 +9,6 @@ from models.alice import controller
 from flask import Flask, request
 from flask_restful import Api
 
-import speech_recognition as sr
 
 ADMIN_USER_ID = os.getenv("ADMIN_USER_ID")
 
@@ -59,17 +58,8 @@ def alice_webhook():
                     bot.send_video(chat_id, document=answer[1])
 
         if "voice" in data["message"]:
-            r = sr.Recognizer()
+            bot.send_message(chat_id, "Poxa, sinto muito. Ainda não sei reconhecer áudios.")
 
-            file_info = bot.get_file(data["message"]["voice"]["file_id"])
-            downloaded_file = bot.download_file(file_info.file_path)
-
-            try:
-                transc = r.recognize_google(downloaded_file)
-                bot.send_message(chat_id, transc)
-            except Exception:
-                bot.send_message(chat_id, "Não consegui reconhecer.")
-            # bot.send_voice(chat_id, downloaded_file)
     except Exception as e:
         bot.send_message(ADMIN_USER_ID, str(e))
 

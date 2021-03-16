@@ -26,174 +26,7 @@ class Helper:
 class Controller:
     def __init__(self):
         self.adapters = []
-        self.classes = {
-            "agradecimento": ["valeu", "obrigado", "obrigada", "brigado", "vlw"],
-            "alarm": [
-                "alarm",
-                "alarme",
-                "remind",
-                "reminder",
-                "lembre",
-                "lembrete",
-                "lembra",
-                "avisa",
-                "avise",
-                "diga",
-                "alerta",
-                "alerte",
-                "chame",
-                "chama",
-                "lembrar",
-                "avisar",
-                "chamar",
-            ],
-            "amb": [
-                "ambulancia",
-                "medico",
-                "doente",
-                "hospital",
-                "clinica",
-                "mal",
-                "desmaio",
-                "desmaiei",
-                "desmaiou",
-                "acidente",
-                "acidentou",
-                "acidentado",
-                "quebrou",
-                "morrendo",
-                "morrer",
-                "infarto",
-                "enfarto",
-                "avc",
-                "quebrou",
-                "quebrei",
-                "pulso",
-                "pulsação",
-            ],
-            "audio": ["audio", "musica", "mp3", "som", "music"],
-            "bitcoin": ["bitcoin", "btc", "btcbrl", "criptomoeda", "bitcoins", "cripo", "criptomoedas"],
-            "calendario": ["eventos", "agenda", "calendario", "compromissos", "compromisso", "evento"],
-            "cancelar": ["cancelar", "cancela", "outro", "errado"],
-            "cinemais": ["cinemais"],
-            "clima": ["clima", "tempo", "previsao", "weather", "chover", "chuva", "sol", "temperatura"],
-            "compra": ["comprar", "compra"],
-            "cop": [
-                "policia",
-                "crime",
-                "assalto",
-                "sequestro",
-                "roubo",
-                "roubaram",
-                "sequestraram",
-                "assaltaram",
-                "assaltou",
-                "policial",
-                "sequestrar",
-                "roubar",
-                "viatura",
-                "assaltado",
-            ],
-            "covid": ["covid", "covid19", "corona", "coronavirus", "sarscov2", "cov"],
-            "download": ["download", "baixar", "baixe"],
-            "duvida": ["duvida", "questionamento", "pergunta", "saber", "sabe", "pregunta"],
-            "emergencia": ["emergencia", "help", "socorro", "ajuda"],
-            "event": ["evento", "compromisso", "eventos"],
-            "female": ["feminino", "female", "f", "w", "mulher", "femea", "woman"],
-            "filme": ["filme", "filmes", "movie", "movies", "cinema", "cinemas"],
-            "fireman": ["bombeiro", "bombeiros", "incendio", "fogo", "explosao"],
-            "forecast": ["previsao", "estimativa"],
-            "holiday": ["feriado", "ferias", "folga", "feriados"],
-            "info": [
-                "informacao",
-                "info",
-                "informativo",
-                "relatorio",
-                "atualizacao",
-                "informe",
-                "fale",
-                "informa",
-                "relate",
-                "relacao",
-            ],
-            "intenção": ["quero", "desejo", "preciso", "vou"],
-            "kinoplex": ["kinoplex"],
-            "limit": ["limit", "limite", "marca", "marcacao"],
-            "loja": ["lojas", "estabelecimentos", "loja", "estabelecimento"],
-            "male": ["masculino", "male", "m", "homem", "macho", "man"],
-            "mostrar": [
-                "ver",
-                "saber",
-                "exibir",
-                "mostrar",
-                "classe",
-                "classifico",
-                "classificacao",
-                "classificado",
-                "classifica",
-                "classificar",
-                "qualifica",
-                "preco",
-                "custo",
-                "lucro",
-                "cotacao",
-                "vender",
-                "vende",
-                "vendo",
-                "venda",
-            ],
-            "movie": ["filme", "filmes"],
-            "nao": ["nao", "negativo", "n"],
-            "next": ["proximo", "proximos", "seguir", "futuro", "futuros", "previsto", "previstos"],
-            "news": ["noticia", "noticias", "novidade", "novidades", "jornal"],
-            "notify": ["notificacao", "notificacoes", "notificar", "alerta", "alertas"],
-            "playlist": ["playlist"],
-            "pokemon": ["pokemon"],
-            "praca": ["praca", "novo", "menor"],
-            "quest": [
-                "qual",
-                "quais",
-                "como",
-                "pode",
-                "mostre",
-                "poderia",
-                "gostaria",
-                "quero",
-                "preciso",
-                "que",
-                "quando",
-                "onde",
-                "quanto",
-                "quantos",
-                "algum",
-                "alguns",
-            ],
-            "rank": ["rank", "rankin", "top", "melhor", "melhores", "mais", "best"],
-            "sair": ["sair"],
-            "shopping": ["shopping", "shoppings"],
-            "sim": ["sim", "positivo", "claro", "isso", "confirma", "confirmo", "s", "sm"],
-            "stock": ["stock", "acoes", "acao", "empresa", "empresas", "investimentos", "investimento"],
-            "teste": [
-                "test",
-                "teste",
-                "testes",
-                "testar",
-                "testando",
-                "testo",
-                "testei",
-                "testezinho",
-                "checar",
-                "check",
-                "checando",
-                "checkando",
-            ],
-            "today": ["today", "hoje", "agora"],
-            "turnoff": ["desativar", "off", "parar", "pare", "desative"],
-            "turnon": ["ativar", "ligar", "começar", "start", "ative", "ligue"],
-            "urashopping": ["uberaba", "center", "antigo", "velho", "maior"],
-            "venda": ["vender", "vende", "venda"],
-            "video": ["video", "filme", "clip", "trailer"],
-        }
+        self.classes = json.loads(open("classes.json").read())
         self.classification = []
         self.commands = []
         self.helper = Helper()
@@ -302,240 +135,6 @@ def remove_comms(text):
     return " ".join([word for word in text.split() if not word.startswith("/")])
 
 
-class Chatbot:
-    def __init__(self, name="Alice"):
-        self.name = name
-        self.user = None
-        self.answer = ""
-        self.controller = controller
-        self.adapters = [
-            self.Cancelar,
-            self.Agradecimento,
-            self.Stocks_ranking,
-            self.Pokemon,
-            self.Secred_link_generate,
-            self.Secred_link_add,
-            self.Invert,
-            self.Help,
-            self.Sair,
-            # self.Test,
-            # self.Undefined,
-        ]
-        self.classes = {
-            "quest": [
-                "qual",
-                "quais",
-                "como",
-                "pode",
-                "mostre",
-                "poderia",
-                "gostaria",
-                "quero",
-                "preciso",
-                "que",
-                "quando",
-                "onde",
-                "quanto",
-                "quantos",
-                "algum",
-                "alguns",
-            ],
-            "calendario": ["eventos", "agenda", "calendario", "compromissos", "compromisso", "evento"],
-            "male": ["masculino", "male", "m", "homem", "macho", "man"],
-            "female": ["feminino", "female", "f", "w", "mulher", "femea", "woman"],
-            "movie": ["filme", "filmes"],
-            "cinemais": ["cinemais"],
-            "kinoplex": ["kinoplex"],
-            "emergencia": ["emergencia", "help", "socorro", "ajuda"],
-            "cop": [
-                "policia",
-                "crime",
-                "assalto",
-                "sequestro",
-                "roubo",
-                "roubaram",
-                "sequestraram",
-                "assaltaram",
-                "assaltou",
-                "policial",
-                "sequestrar",
-                "roubar",
-                "viatura",
-                "assaltado",
-            ],
-            "fireman": ["bombeiro", "bombeiros", "incendio", "fogo", "explosao"],
-            "amb": [
-                "ambulancia",
-                "medico",
-                "doente",
-                "hospital",
-                "clinica",
-                "mal",
-                "desmaio",
-                "desmaiei",
-                "desmaiou",
-                "acidente",
-                "acidentou",
-                "acidentado",
-                "quebrou",
-                "morrendo",
-                "morrer",
-                "infarto",
-                "enfarto",
-                "avc",
-                "quebrou",
-                "quebrei",
-                "pulso",
-                "pulsação",
-            ],
-            "venda": ["vender", "vende", "venda"],
-            "compra": ["comprar", "compra"],
-            "duvida": ["duvida", "questionamento", "pergunta", "saber", "sabe", "pregunta"],
-            "intenção": ["quero", "desejo", "preciso", "vou"],
-            "sair": ["sair"],
-            "sim": ["sim", "positivo", "claro", "isso", "confirma", "confirmo", "s", "sm"],
-            "nao": ["nao", "negativo", "n"],
-            "agradecimento": ["valeu", "obrigado", "obrigada", "brigado", "vlw"],
-            "mostrar": [
-                "ver",
-                "saber",
-                "exibir",
-                "mostrar",
-                "classe",
-                "classifico",
-                "classificacao",
-                "classificado",
-                "classifica",
-                "classificar",
-                "qualifica",
-                "preco",
-                "custo",
-                "lucro",
-                "cotacao",
-                "vender",
-                "vende",
-                "vendo",
-                "venda",
-            ],
-            "cancelar": ["cancelar", "cancela", "outro", "errado"],
-            "today": ["today", "hoje", "agora"],
-            "event": ["evento", "compromisso", "eventos"],
-            "next": ["proximo", "proximos", "seguir", "futuro", "futuros", "previsto", "previstos"],
-            "holiday": ["feriado", "ferias", "folga", "feriados"],
-            "shopping": ["shopping", "shoppings"],
-            "praca": ["praca", "novo", "menor"],
-            "urashopping": ["uberaba", "center", "antigo", "velho", "maior"],
-            "filme": ["filme", "filmes", "movie", "movies", "cinema", "cinemas"],
-            "loja": ["lojas", "estabelecimentos", "loja", "estabelecimento"],
-            "clima": ["clima", "tempo", "previsao", "weather", "chover", "chuva", "sol", "temperatura"],
-            "news": ["noticia", "noticias", "novidade", "novidades", "jornal"],
-            "turnoff": ["desativar", "off", "parar", "pare", "desative"],
-            "turnon": ["ativar", "ligar", "começar", "start", "ative", "ligue"],
-            "notify": ["notificacao", "notificacoes", "notificar", "alerta", "alertas"],
-            "bitcoin": ["bitcoin", "btc", "btcbrl", "criptomoeda", "bitcoins", "cripo", "criptomoedas"],
-            "forecast": ["previsao", "estimativa"],
-            "limit": ["limit", "limite", "marca", "marcacao"],
-            "video": ["video", "filme", "clip", "trailer"],
-            "audio": ["audio", "musica", "mp3", "som", "music"],
-            "download": ["download", "baixar", "baixe"],
-            "playlist": ["playlist"],
-            "covid": ["covid", "covid19", "corona", "coronavirus", "sarscov2", "cov"],
-            "info": [
-                "informacao",
-                "info",
-                "informativo",
-                "relatorio",
-                "atualizacao",
-                "informe",
-                "fale",
-                "informa",
-                "relate",
-                "relacao",
-            ],
-            "pokemon": ["pokemon"],
-            "rank": ["rank", "rankin", "top", "melhor", "melhores", "mais", "best"],
-            "stock": ["stock", "acoes", "acao", "empresa", "empresas", "investimentos", "investimento"],
-            "teste": [
-                "test",
-                "teste",
-                "testes",
-                "testar",
-                "testando",
-                "testo",
-                "testei",
-                "testezinho",
-                "checar",
-                "check",
-                "checando",
-                "checkando",
-            ],
-        }
-        self.chats = {}
-        self.classification = []
-        self.commands = []
-        self.send_cep = None
-        self.user_id = None
-
-    # Core functions
-
-    def youtube_link(self, ans):
-        for term in ans.split():
-            if "youtube.com" in term:
-                return term
-            if "watch?" in term:
-                return term
-        return None
-
-    def number(self, ans):
-        num = re.findall(r"\d+", ans)
-        if len(num) > 0:
-            if len(num) == 2 or len(num) == 1:
-                return float(".".join(num))
-            else:
-                return float(num[0])
-        return None
-
-    def get_number(self, ans):
-        for word in ans.split(" "):
-            if word.isnumeric():
-                return word
-
-    def send(self, ans):
-        # self.answer = 'Zeca: ' + ans
-        self.answer = ans
-        return self.answer
-
-    def start_talk(self):
-        self.send("Olá! Como posso te ajudar?")
-        return self.answer
-
-    def classific(self, message):
-        for word in self.classes.keys():
-            if any(x in self.classes[word] for x in self.ClearText(message).split()):
-                self.controller.classification.append(word)
-
-        for word in message.split():
-            if word.startswith("/"):
-                self.controller.commands.append(f'{self.ClearText(word).replace(" ", "")}')
-
-    def get_response(self, message):
-        self.classific(message)
-        for adap in self.controller.adapters:
-            ans = adap(message)
-            if ans:
-                return self.send(ans)
-
-    def match(self, reqs=None, comms=None):
-        if reqs:
-            if all(x in self.classification for x in reqs):
-                return True
-        if comms:
-            if all(x in self.commands for x in comms):
-                return True
-
-        return False
-
-
 @controller.add_adapter(comms=["help"])
 def Help(message, **fields):
     answers = []
@@ -600,6 +199,8 @@ def Reminder(message, **fields):
 
     hh = mm = None
     dd = MM = aaaa = None
+    reminder_date = None
+    reminder_datetime = None
 
     for word in message.split():
         if ":" in word:
@@ -650,6 +251,34 @@ def Reminder(message, **fields):
                         else:
                             aaaa = now_year
 
+    if not (dd and MM and aaaa):
+        if controller.match(reqs=["amanhã"]):
+            if 0 <= now.hour <= 4:
+                reminder_date = now.strftime("%Y-%m-%d")
+            else:
+                reminder_date = (now + timedelta(days=1)).strftime("%Y-%m-%d")
+        elif controller.match(reqs=["hoje"]):
+            reminder_date = now.strftime("%Y-%m-%d")
+
+    if not (hh and mm):
+        if controller.match(reqs=["manhã"]):
+            hh = "08"
+            mm = "00"
+        elif controller.match(reqs=["tarde"]):
+            hh = "16"
+            mm = "00"
+        elif controller.match(reqs=["noite"]):
+            hh = "20"
+            mm = "00"
+        elif controller.match(reqs=["madrugada"]):
+            hh = "02"
+            mm = "00"
+        elif re.search(r"\d*", message):
+            hh = re.search(r"\d*", message).group()
+            if len(hh) == 1:
+                hh = "0" + hh
+            mm = "00"
+
     temp = message.split('"')
     if len(temp) >= 3:
         payload["title"] = temp[1]
@@ -659,10 +288,12 @@ def Reminder(message, **fields):
     if hh and mm:
         payload["time_tz"] = f"{hh}:{mm}"
     else:
-        payload["time_tz"] = (now + timedelta(hours=1)).strftime("%H:%M")
+        payload["time_tz"] = (now + timedelta(hours=4)).strftime("%H:%M")
 
     if dd and MM and aaaa:
         payload["date_tz"] = f"{aaaa}-{MM}-{dd}"
+    elif reminder_date:
+        payload["date_tz"] = reminder_date
     else:
         reminder_datetime = now.strftime("%Y-%m-%d") + f' {payload["time_tz"]}'
         reminder_datetime = datetime.strptime(reminder_datetime, "%Y-%m-%d %H:%M").replace(tzinfo=pytz.timezone("Brazil/East"))
