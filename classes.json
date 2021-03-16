@@ -1,0 +1,391 @@
+{
+    "agradecimento": [
+        "valeu",
+        "obrigado",
+        "obrigada",
+        "brigado",
+        "vlw"
+    ],
+    "alarm": [
+        "alarm",
+        "alarme",
+        "remind",
+        "reminder",
+        "lembre",
+        "lembrete",
+        "lembra",
+        "avisa",
+        "avise",
+        "diga",
+        "alerta",
+        "alerte",
+        "chame",
+        "chama",
+        "lembrar",
+        "avisar",
+        "chamar",
+    ],
+    "amb": [
+        "ambulancia",
+        "medico",
+        "doente",
+        "hospital",
+        "clinica",
+        "mal",
+        "desmaio",
+        "desmaiei",
+        "desmaiou",
+        "acidente",
+        "acidentou",
+        "acidentado",
+        "quebrou",
+        "morrendo",
+        "morrer",
+        "infarto",
+        "enfarto",
+        "avc",
+        "quebrou",
+        "quebrei",
+        "pulso",
+        "pulsação",
+    ],
+    "audio": [
+        "audio",
+        "musica",
+        "mp3",
+        "som",
+        "music"
+    ],
+    "bitcoin": [
+        "bitcoin",
+        "btc",
+        "btcbrl",
+        "criptomoeda",
+        "bitcoins",
+        "cripo",
+        "criptomoedas"
+    ],
+    "calendario": [
+        "eventos",
+        "agenda",
+        "calendario",
+        "compromissos",
+        "compromisso",
+        "evento"
+    ],
+    "cancelar": [
+        "cancelar",
+        "cancela",
+        "outro",
+        "errado"
+    ],
+    "cinemais": [
+        "cinemais"
+    ],
+    "clima": [
+        "clima",
+        "tempo",
+        "previsao",
+        "weather",
+        "chover",
+        "chuva",
+        "sol",
+        "temperatura"
+    ],
+    "compra": [
+        "comprar",
+        "compra"
+    ],
+    "cop": [
+        "policia",
+        "crime",
+        "assalto",
+        "sequestro",
+        "roubo",
+        "roubaram",
+        "sequestraram",
+        "assaltaram",
+        "assaltou",
+        "policial",
+        "sequestrar",
+        "roubar",
+        "viatura",
+        "assaltado",
+    ],
+    "covid": [
+        "covid",
+        "covid19",
+        "corona",
+        "coronavirus",
+        "sarscov2",
+        "cov"
+    ],
+    "download": [
+        "download",
+        "baixar",
+        "baixe"
+    ],
+    "duvida": [
+        "duvida",
+        "questionamento",
+        "pergunta",
+        "saber",
+        "sabe",
+        "pregunta"
+    ],
+    "emergencia": [
+        "emergencia",
+        "help",
+        "socorro",
+        "ajuda"
+    ],
+    "event": [
+        "evento",
+        "compromisso",
+        "eventos"
+    ],
+    "female": [
+        "feminino",
+        "female",
+        "f",
+        "w",
+        "mulher",
+        "femea",
+        "woman"
+    ],
+    "filme": [
+        "filme",
+        "filmes",
+        "movie",
+        "movies",
+        "cinema",
+        "cinemas"
+    ],
+    "fireman": [
+        "bombeiro",
+        "bombeiros",
+        "incendio",
+        "fogo",
+        "explosao"
+    ],
+    "forecast": [
+        "previsao",
+        "estimativa"
+    ],
+    "holiday": [
+        "feriado",
+        "ferias",
+        "folga",
+        "feriados"
+    ],
+    "info": [
+        "informacao",
+        "info",
+        "informativo",
+        "relatorio",
+        "atualizacao",
+        "informe",
+        "fale",
+        "informa",
+        "relate",
+        "relacao",
+    ],
+    "intenção": [
+        "quero",
+        "desejo",
+        "preciso",
+        "vou"
+    ],
+    "kinoplex": [
+        "kinoplex"
+    ],
+    "limit": [
+        "limit",
+        "limite",
+        "marca",
+        "marcacao"
+    ],
+    "loja": [
+        "lojas",
+        "estabelecimentos",
+        "loja",
+        "estabelecimento"
+    ],
+    "male": [
+        "masculino",
+        "male",
+        "m",
+        "homem",
+        "macho",
+        "man"
+    ],
+    "mostrar": [
+        "ver",
+        "saber",
+        "exibir",
+        "mostrar",
+        "classe",
+        "classifico",
+        "classificacao",
+        "classificado",
+        "classifica",
+        "classificar",
+        "qualifica",
+        "preco",
+        "custo",
+        "lucro",
+        "cotacao",
+        "vender",
+        "vende",
+        "vendo",
+        "venda",
+    ],
+    "movie": [
+        "filme",
+        "filmes"
+    ],
+    "nao": [
+        "nao",
+        "negativo",
+        "n"
+    ],
+    "next": [
+        "proximo",
+        "proximos",
+        "seguir",
+        "futuro",
+        "futuros",
+        "previsto",
+        "previstos"
+    ],
+    "news": [
+        "noticia",
+        "noticias",
+        "novidade",
+        "novidades",
+        "jornal"
+    ],
+    "notify": [
+        "notificacao",
+        "notificacoes",
+        "notificar",
+        "alerta",
+        "alertas"
+    ],
+    "playlist": [
+        "playlist"
+    ],
+    "pokemon": [
+        "pokemon"
+    ],
+    "praca": [
+        "praca",
+        "novo",
+        "menor"
+    ],
+    "quest": [
+        "qual",
+        "quais",
+        "como",
+        "pode",
+        "mostre",
+        "poderia",
+        "gostaria",
+        "quero",
+        "preciso",
+        "que",
+        "quando",
+        "onde",
+        "quanto",
+        "quantos",
+        "algum",
+        "alguns",
+    ],
+    "rank": [
+        "rank",
+        "rankin",
+        "top",
+        "melhor",
+        "melhores",
+        "mais",
+        "best"
+    ],
+    "sair": [
+        "sair"
+    ],
+    "shopping": [
+        "shopping",
+        "shoppings"
+    ],
+    "sim": [
+        "sim",
+        "positivo",
+        "claro",
+        "isso",
+        "confirma",
+        "confirmo",
+        "s",
+        "sm"
+    ],
+    "stock": [
+        "stock",
+        "acoes",
+        "acao",
+        "empresa",
+        "empresas",
+        "investimentos",
+        "investimento"
+    ],
+    "teste": [
+        "test",
+        "teste",
+        "testes",
+        "testar",
+        "testando",
+        "testo",
+        "testei",
+        "testezinho",
+        "checar",
+        "check",
+        "checando",
+        "checkando",
+    ],
+    "today": [
+        "today",
+        "hoje",
+        "agora"
+    ],
+    "turnoff": [
+        "desativar",
+        "off",
+        "parar",
+        "pare",
+        "desative"
+    ],
+    "turnon": [
+        "ativar",
+        "ligar",
+        "começar",
+        "start",
+        "ative",
+        "ligue"
+    ],
+    "urashopping": [
+        "uberaba",
+        "center",
+        "antigo",
+        "velho",
+        "maior"
+    ],
+    "venda": [
+        "vender",
+        "vende",
+        "venda"
+    ],
+    "video": [
+        "video",
+        "filme",
+        "clip",
+        "trailer"
+    ],
+}
