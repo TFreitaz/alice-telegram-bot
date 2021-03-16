@@ -257,6 +257,27 @@ def Reminder(message, **fields):
                 reminder_date = now.strftime("%Y-%m-%d")
             else:
                 reminder_date = (now + timedelta(days=1)).strftime("%Y-%m-%d")
+        elif controller.match(reqs=["hoje"]):
+            reminder_date = now.strftime("%Y-%m-%d")
+
+    if not (hh and mm):
+        if controller.match(reqs=["manhã"]):
+            hh = '08'
+            mm = '00'
+        elif controller.match(reqs=["tarde"]):
+            hh = '16'
+            mm = '00'
+        elif controller.match(reqs=["noite"]):
+            hh = '20'
+            mm = '00'
+        elif controller.match(reqs=["madrugada"]):
+            hh = '02'
+            mm = '00'
+        elif re.search(r"\d*", message):
+            hh = re.search(r"\d*", message).group()
+            if len(hh) == 1:
+                hh = "0" + hh
+            mm = '00'
 
     temp = message.split('"')
     if len(temp) >= 3:
