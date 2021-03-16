@@ -26,7 +26,7 @@ class Helper:
 class Controller:
     def __init__(self):
         self.adapters = []
-        self.classes = json.loads(open('classes.json').read())
+        self.classes = json.loads(open("classes.json").read())
         self.classification = []
         self.commands = []
         self.helper = Helper()
@@ -199,6 +199,8 @@ def Reminder(message, **fields):
 
     hh = mm = None
     dd = MM = aaaa = None
+    reminder_date = None
+    reminder_datetime = None
 
     for word in message.split():
         if ":" in word:
@@ -250,7 +252,11 @@ def Reminder(message, **fields):
                             aaaa = now_year
 
     if not (dd and MM and aaaa):
-        if controller.match(re)
+        if controller.match(reqs=["amanhã"]):
+            if 0 <= now.hour <= 4:
+                reminder_date = now.strftime("%Y-%m-%d")
+            else:
+                reminder_date = (now + timedelta(days=1)).strftime("%Y-%m-%d")
 
     temp = message.split('"')
     if len(temp) >= 3:
@@ -265,6 +271,8 @@ def Reminder(message, **fields):
 
     if dd and MM and aaaa:
         payload["date_tz"] = f"{aaaa}-{MM}-{dd}"
+    elif reminder_date:
+        payload["date_tz"] = reminder_date
     else:
         reminder_datetime = now.strftime("%Y-%m-%d") + f' {payload["time_tz"]}'
         reminder_datetime = datetime.strptime(reminder_datetime, "%Y-%m-%d %H:%M").replace(tzinfo=pytz.timezone("Brazil/East"))
