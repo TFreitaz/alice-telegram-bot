@@ -25,6 +25,10 @@
         "avisar",
         "chamar",
     ],
+    "amanhã": [
+        "amanha",
+        "tomorrow"
+    ],
     "amb": [
         "ambulancia",
         "medico",
@@ -211,6 +215,10 @@
         "loja",
         "estabelecimento"
     ],
+    "madrugada": [
+        "madrugada",
+        "matina"
+    ],
     "male": [
         "masculino",
         "male",
@@ -218,6 +226,11 @@
         "homem",
         "macho",
         "man"
+    ],
+    "manhã": [
+        "manha",
+        "manhazinha",
+        "cedo"
     ],
     "mostrar": [
         "ver",
@@ -250,13 +263,14 @@
         "n"
     ],
     "next": [
-        "proximo",
-        "proximos",
-        "seguir",
+        "daqui",
         "futuro",
         "futuros",
         "previsto",
-        "previstos"
+        "previstos",
+        "proximo",
+        "proximos",
+        "seguir",
     ],
     "news": [
         "noticia",
@@ -264,6 +278,12 @@
         "novidade",
         "novidades",
         "jornal"
+    ],
+    "noite": [
+        "noite",
+        "anoitecer",
+        "anoite",
+        "escurecer"
     ],
     "notify": [
         "notificacao",
@@ -335,6 +355,13 @@
         "empresas",
         "investimentos",
         "investimento"
+    ],
+    "tarde": [
+        "tarde",
+        "entardecer",
+        "tardezinha",
+        "detarde",
+        "detardezinha"
     ],
     "teste": [
         "test",
