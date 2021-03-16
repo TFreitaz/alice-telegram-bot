@@ -3,12 +3,6 @@ import psycopg2
 
 DATABASE_URL = os.getenv("DATABASE_URL")
 
-# DATABASE = "d4cstjfrgaajuf"
-# HOST = "ec2-52-73-199-211.compute-1.amazonaws.com"
-# PASSWORD = "1b97b82929a4a3fd93b662ae5eb6e8e0d1a2fd63dccc86b3ec55b48736a4c0ea"
-# USER = "wpdskiaegdhrec"
-# PORT = "5432"
-
 
 def create_cmd(table, columns):
     return f"CREATE TABLE {table}(" + ", ".join([f"{col} varchar" for col in columns]) + ");"
