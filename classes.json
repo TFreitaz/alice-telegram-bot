@@ -23,7 +23,7 @@
         "chama",
         "lembrar",
         "avisar",
-        "chamar",
+        "chamar"
     ],
     "amanhã": [
         "amanha",
@@ -51,7 +51,7 @@
         "quebrou",
         "quebrei",
         "pulso",
-        "pulsação",
+        "pulsação"
     ],
     "audio": [
         "audio",
@@ -114,7 +114,7 @@
         "sequestrar",
         "roubar",
         "viatura",
-        "assaltado",
+        "assaltado"
     ],
     "covid": [
         "covid",
@@ -196,7 +196,7 @@
         "fale",
         "informa",
         "relate",
-        "relacao",
+        "relacao"
     ],
     "intenção": [
         "quero",
@@ -255,7 +255,7 @@
         "vender",
         "vende",
         "vendo",
-        "venda",
+        "venda"
     ],
     "movie": [
         "filme",
@@ -274,7 +274,7 @@
         "previstos",
         "proximo",
         "proximos",
-        "seguir",
+        "seguir"
     ],
     "news": [
         "noticia",
@@ -323,7 +323,7 @@
         "quanto",
         "quantos",
         "algum",
-        "alguns",
+        "alguns"
     ],
     "rank": [
         "rank",
@@ -379,7 +379,7 @@
         "checar",
         "check",
         "checando",
-        "checkando",
+        "checkando"
     ],
     "today": [
         "today",
@@ -418,5 +418,5 @@
         "filme",
         "clip",
         "trailer"
-    ],
+    ]
 }
