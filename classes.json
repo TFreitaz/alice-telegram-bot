@@ -176,6 +176,10 @@
         "previsao",
         "estimativa"
     ],
+    "hoje": [
+        "hoje",
+        "today"
+    ],
     "holiday": [
         "feriado",
         "ferias",
