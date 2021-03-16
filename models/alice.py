@@ -209,7 +209,7 @@ def Reminder(message, **fields):
                 temp = [re.search(r"\d*", val).group() for val in temp]
                 if (temp[0] and temp[0].isnumeric) and (temp[1] and temp[1].isnumeric):
                     if 0 <= int(temp[0]) <= 23 and 0 <= int(temp[1]) <= 59:
-                        hh = str(int(temp[0]) + 3)
+                        hh = temp[0]
                         mm = temp[1]
 
                         if len(hh) == 1:
@@ -286,7 +286,7 @@ def Reminder(message, **fields):
         payload["title"] = "Reminder"
 
     if hh and mm:
-        payload["time_tz"] = f"{hh}:{mm}"
+        payload["time_tz"] = f"{str(int(hh)+3)}:{mm}"
     else:
         payload["time_tz"] = (now + timedelta(hours=4)).strftime("%H:%M")
 
