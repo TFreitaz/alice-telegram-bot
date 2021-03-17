@@ -11,7 +11,8 @@ from datetime import datetime, timedelta
 
 from utils.database import DataBase
 from utils.investments import Stocks
-from utils.image_tools import cartoon_generator
+
+# from utils.image_tools import cartoon_generator
 
 TELEGRAM_TOKEN = os.getenv("TELEGRAM_TOKEN")
 ADMIN_USER_ID = os.getenv("ADMIN_USER_ID")
@@ -334,29 +335,29 @@ def Suggestion(message, **fields):
     return answers
 
 
-@controller.add_adapter(
-    reqs=["cartoon"], comms=["cartoon"], only_admin=True, description="Gerar versão cartoon de uma imagem", user_inputs=["imagem"]
-)
-def Cartoon(message, **fields):
-    answers = []
+# @controller.add_adapter(
+#     reqs=["cartoon"], comms=["cartoon"], only_admin=True, description="Gerar versão cartoon de uma imagem", user_inputs=["imagem"]
+# )
+# def Cartoon(message, **fields):
+#     answers = []
 
-    image = fields.get("image", None)
+#     image = fields.get("image", None)
 
-    if not image:
-        answer = "Me mande uma imagem para eu transformar em cartoon!"
-        answers.append(("msg", answer))
-    else:
-        answer1 = "Aqui está seu cartoon! Espero que goste ^^"
-        k = 9
-        numbers = re.findall(r"\d+", message)
-        if len(numbers) > 0:
-            k = numbers[0]
+#     if not image:
+#         answer = "Me mande uma imagem para eu transformar em cartoon!"
+#         answers.append(("msg", answer))
+#     else:
+#         answer1 = "Aqui está seu cartoon! Espero que goste ^^"
+#         k = 9
+#         numbers = re.findall(r"\d+", message)
+#         if len(numbers) > 0:
+#             k = numbers[0]
 
-        answer2 = cartoon_generator(image, k)
+#         answer2 = cartoon_generator(image, k)
 
-        answers.append(("msg", answer1))
-        answers.append(("img", answer2))
-    return answers
+#         answers.append(("msg", answer1))
+#         answers.append(("img", answer2))
+#     return answers
 
 
 @controller.add_adapter(
