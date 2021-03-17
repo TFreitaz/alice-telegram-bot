@@ -78,7 +78,7 @@ class Controller:
         if comms:
             if all(x in self.commands for x in comms):
                 return True
-        if not (reqs and comms):
+        if not (reqs or comms):
             return True
 
         return False
