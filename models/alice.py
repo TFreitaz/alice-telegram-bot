@@ -74,9 +74,11 @@ class Controller:
     def match(self, reqs=None, comms=None):
         if reqs:
             if all(x in self.classification for x in reqs):
+                zlog(json.dumps(self.classification))
                 return True
         if comms:
             if all(x in self.commands for x in comms):
+                zlog(json.dumps(self.commands))
                 return True
         if not (reqs or comms):
             return True
