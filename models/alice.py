@@ -100,7 +100,7 @@ class Controller:
                 self.classification = []
                 self.commands = []
                 raise e
-            zlog("Obteve ans.")
+            zlog(str(ans))
             if ans:
                 zlog("Retornou resposta.")
                 return self.send(ans)
