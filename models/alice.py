@@ -482,7 +482,7 @@ def Secred_link_add(message, **fields):
 
 
 @controller.add_adapter(comms=["invert"], description="Inverter um texto", user_inputs=["texto"])
-def Invert(message):
+def Invert(message, **fields):
     answers = []
     words = message.split()
     words.remove("/invert")
