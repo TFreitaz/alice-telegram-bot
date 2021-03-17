@@ -63,6 +63,8 @@ class Controller:
         return create_adapter
 
     def classific(self, message):
+        self.classification = []
+        self.commands = []
         for word in self.classes.keys():
             if any(x in self.classes[word] for x in ClearText(message).split()):
                 self.classification.append(word)
