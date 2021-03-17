@@ -33,7 +33,7 @@ class Controller:
         self.user_id = None
 
     def add_adapter(
-        self, reqs=None, comms=None, only_admin=False, after_classification=[], after_commands=[], description="", user_inputs=[]
+        self, reqs=[], comms=[], only_admin=False, after_classification=[], after_commands=[], description="", user_inputs=[]
     ):
         def create_adapter(func):
             def adapter(message, **fields):
@@ -482,7 +482,7 @@ def Secred_link_add(message, **fields):
 
 
 @controller.add_adapter(comms=["invert"], description="Inverter um texto", user_inputs=["texto"])
-def Invert(message):
+def Invert(message, **fields):
     answers = []
     words = message.split()
     words.remove("/invert")
