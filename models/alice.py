@@ -73,13 +73,18 @@ class Controller:
                 self.commands.append(f'{ClearText(word).replace(" ", "")}')
 
     def match(self, reqs=None, comms=None):
-        zlog("Entrou em match.")
-        if reqs:
-            if all(x in self.classification for x in reqs):
-                return True
-        if comms:
-            if all(x in self.commands for x in comms):
-                return True
+        try:
+            if reqs:
+                if all(x in self.classification for x in reqs):
+                    return True
+            if comms:
+                if all(x in self.commands for x in comms):
+                    return True
+        except Exception:
+            zlog(json.dumps(reqs))
+            zlog(json.dumps(self.classification))
+            zlog(json.dumps(comms))
+            zlog(json.dumps(self.commands))
 
         return False
 
