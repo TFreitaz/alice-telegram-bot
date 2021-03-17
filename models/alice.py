@@ -18,6 +18,11 @@ TELEGRAM_TOKEN = os.getenv("TELEGRAM_TOKEN")
 ADMIN_USER_ID = os.getenv("ADMIN_USER_ID")
 
 
+def zlog(message):
+    bot = telebot.TeleBot(TELEGRAM_TOKEN)
+    bot.send_message(ADMIN_USER_ID, message)
+
+
 class Helper:
     def __init__(self):
         self.public_adapters = []
@@ -58,6 +63,7 @@ class Controller:
         return create_adapter
 
     def classific(self, message):
+        zlog("Entrou em classific.")
         for word in self.classes.keys():
             if any(x in self.classes[word] for x in ClearText(message).split()):
                 self.classification.append(word)
@@ -67,6 +73,7 @@ class Controller:
                 self.commands.append(f'{ClearText(word).replace(" ", "")}')
 
     def match(self, reqs=None, comms=None):
+        zlog("Entrou em match.")
         if reqs:
             if all(x in self.classification for x in reqs):
                 return True
@@ -77,16 +84,19 @@ class Controller:
         return False
 
     def get_response(self, text=None, image=None):
+        zlog("Entrou no get_response.")
         self.classific(text)
         # return self.send([("msg", len(self.adapters))])
         for adap in self.adapters:
             try:
                 ans = adap(text, image=image)
             except Exception as e:
+                zlog("Recebeu Exception no get_response.")
                 self.classification = []
                 self.commands = []
                 raise e
             if ans:
+                zlog("Retornou resposta.")
                 return self.send(ans)
         # return self.send([("msg", json.dumps(self.classification)), ("msg", json.dumps(self.commands))])
 
@@ -513,4 +523,5 @@ def Undefined(message, **fields):
     answers = []
     answer = "Sinto muito, mas não entendi."
     answers.append(("msg", answer))
+    zlog("Entrou no adaptador.")
     return answers
