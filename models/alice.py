@@ -525,8 +525,8 @@ def Test(message, **fields):
 
 @controller.add_adapter(reqs=[], comms=[])
 def Undefined(message, **fields):
+    zlog("Entrou no adaptador.")
     answers = []
     answer = "Sinto muito, mas não entendi."
     answers.append(("msg", answer))
-    zlog("Entrou no adaptador.")
     return answers
