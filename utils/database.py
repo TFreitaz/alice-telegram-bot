@@ -1,7 +1,10 @@
 import os
 import psycopg2
 
-DATABASE_URL = os.getenv("DATABASE_URL")
+from pymongo import MongoClient
+
+HEROKU_DB_URL = os.getenv("HEROKU_DB_URL")
+MONGO_DB_URI = os.getenv("MONGO_DB_URI")
 
 
 def create_cmd(table, columns):
@@ -15,13 +18,13 @@ def set_value(value: str):
     return f"'{value}'"
 
 
-class DataBase:
+class HerokuDB:
     def __init__(self):
         self.connect()
 
     def connect(self):
         # self.conn = psycopg2.connect(database=DATABASE, host=HOST, password=PASSWORD, user=USER, port=PORT)
-        self.conn = psycopg2.connect(DATABASE_URL)
+        self.conn = psycopg2.connect(HEROKU_DB_URL)
         self.cursor = self.conn.cursor()
 
     def insert(self, table, values, columns=[]):
@@ -30,3 +33,13 @@ class DataBase:
             cmd += "(" + ", ".join(columns) + ")"
         cmd += " VALUES (" + ", ".join(map(set_value, values)) + ");"
         self.cursor.execute(cmd)
+
+
+class MongoDB:
+    def __init__(self):
+        self.client = MongoClient(MONGO_DB_URI)
+        self.db = self.client["alice"]
+        self.collection = None
+
+    def get_collection(self, collection: str):
+        self.collection = self.db[collection]

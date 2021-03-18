@@ -9,8 +9,9 @@ import unidecode
 
 from datetime import datetime, timedelta
 
-from utils.database import DataBase
 from utils.investments import Stocks
+from utils.user_manager import User, Users
+from utils.database import HerokuDB
 
 # from utils.image_tools import cartoon_generator
 
@@ -96,8 +97,20 @@ class Controller:
                 self.commands = []
                 raise e
             if ans:
+                ans += self.postscriptum()
                 return self.send(ans)
         # return self.send([("msg", json.dumps(self.classification)), ("msg", json.dumps(self.commands))])
+
+    def postscriptum(self):
+        answers = []
+
+        # Catching new user
+        users = Users()
+        if not users.get_user(self.user_id):
+            user = User(telegram_id=self.user_id)
+            Users().add_user(user.to_dict())
+
+        return answers
 
     def send(self, ans):
         self.answer = ans
@@ -443,7 +456,7 @@ def Agradecimento(message, **fields):
 def Secred_link_generate(message, **fields):
     answers = []
     log = ""
-    db = DataBase()
+    db = HerokuDB()
     try:
         n = int(re.findall(r"\d+", message)[0])
     except Exception:
@@ -473,7 +486,7 @@ def Secred_link_generate(message, **fields):
 )
 def Secred_link_add(message, **fields):
     answers = []
-    db = DataBase()
+    db = HerokuDB()
     links = get_link(message)
     log = ""
     if len(links) > 0:
