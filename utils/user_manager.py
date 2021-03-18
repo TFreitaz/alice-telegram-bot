@@ -56,7 +56,7 @@ class Users:
     def add_user(self, user: User):
         if not user.telegram_id:
             raise Exception("User telegram_id parameter must be not null.")
-        
+
         if type(user.telegram_id) == int:
             user.telegram_id = str(user.telegram_id)
 
