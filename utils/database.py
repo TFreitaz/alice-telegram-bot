@@ -43,3 +43,4 @@ class MongoDB:
 
     def get_collection(self, collection: str):
         self.collection = self.db[collection]
+        return self.collection
