@@ -111,7 +111,7 @@ class Controller:
         client = MongoClient(MONGO_DB_URI)
         db = client["alice"]
         collection = db["users"]
-        data = collection.findall({})
+        data = collection.find({})
 
         answer = json.dumps(data)
 
