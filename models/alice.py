@@ -98,7 +98,7 @@ class Controller:
                 self.commands = []
                 raise e
             if ans:
-                ans += self.postscriptum()
+                # ans += self.postscriptum()
                 return self.send(ans)
         # return self.send([("msg", json.dumps(self.classification)), ("msg", json.dumps(self.commands))])
 
