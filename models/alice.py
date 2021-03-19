@@ -126,7 +126,8 @@ class Controller:
 
         # Catching new user
         zlog("Buscando usuário.")
-        zlog(MONGO_DB_URI)
+        zlog(json.dumps(client.list_database_names()))
+        zlog(json.dumps(db.list_collection_names()))
         user = users.find_one({"telegram_id": self.user_id})
         zlog("Usuário buscado.")
         if not user:
