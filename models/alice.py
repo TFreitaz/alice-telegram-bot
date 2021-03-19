@@ -125,8 +125,11 @@ class Controller:
         # answers.append(("msg", answer))
 
         # Catching new user
+        zlog("Buscando usuário.")
         user = users.find_one({"telegram_id": self.user_id})
-        if not :
+        zlog("Usuário buscado.")
+        if not user:
+            zlog("Usuário não encontrado. Criando usuário.")
             user = User(telegram_id=self.user_id)
             users.insert_one(user.to_dict())
             answer = "Usuário inserido."
