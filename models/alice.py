@@ -11,8 +11,9 @@ from pymongo import MongoClient
 from datetime import datetime, timedelta
 
 from utils.investments import Stocks
-from utils.user_manager import User
-from utils.database import HerokuDB
+
+# from utils.user_manager import User
+from utils.database import HerokuDB, MongoDB
 
 # from utils.image_tools import cartoon_generator
 
@@ -112,27 +113,27 @@ class Controller:
 
         # Debugging MongoDB
 
-        # mongo = MongoDB()
-        # _ = mongo.get_collection("users")
+        mongo = MongoDB()
+        _ = mongo.get_collection("users")
 
-        # data = mongo.collection.find_one({})
+        data = mongo.collection.find_one({})
 
-        # if data:
-        #     answer = json.dumps(data)
-        # else:
-        #     answer = "Usuário não encontrado."
-
-        # answers.append(("msg", answer))
-
-        # Catching new user
-        if not users.find_one({"telegram_id": self.user_id}):
-            user = User(telegram_id=self.user_id)
-            users.insert_one(user.to_dict())
-            answer = "Usuário inserido."
+        if data:
+            answer = json.dumps(data)
         else:
-            answer = "Usuário existente."
+            answer = "Usuário não encontrado."
 
         answers.append(("msg", answer))
+
+        # Catching new user
+        # if not users.find_one({"telegram_id": self.user_id}):
+        #     user = User(telegram_id=self.user_id)
+        #     users.insert_one(user.to_dict())
+        #     answer = "Usuário inserido."
+        # else:
+        #     answer = "Usuário existente."
+
+        # answers.append(("msg", answer))
 
         return answers
 
