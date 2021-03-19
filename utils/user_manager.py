@@ -1,7 +1,7 @@
 import os
+import json
 import telebot
 
-from pymongo import MongoClient
 from typing import Union, List
 from datetime import datetime
 
@@ -13,11 +13,6 @@ TELEGRAM_TOKEN = os.getenv("TELEGRAM_TOKEN")
 def zlog(message):
     bot = telebot.TeleBot(TELEGRAM_TOKEN)
     bot.send_message(ADMIN_USER_ID, message)
-
-
-client = MongoClient(MONGO_DB_URI)
-db = client["alice"]
-users = db["users"]
 
 
 class Chat:
@@ -65,6 +60,7 @@ class Users:
             telegram_id = str(telegram_id)
         zlog("Usuário pesquisado.")
         user = users.find_one({"telegram_id": telegram_id})
+        zlog(json.dumps(user))
         if user:
             return User(**user)
 

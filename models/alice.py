@@ -7,10 +7,11 @@ import telebot
 import requests
 import unidecode
 
+from pymongo import MongoClient
 from datetime import datetime, timedelta
 
 from utils.investments import Stocks
-from utils.user_manager import User, Users
+from utils.user_manager import User
 from utils.database import HerokuDB
 
 # from utils.image_tools import cartoon_generator
@@ -18,6 +19,10 @@ from utils.database import HerokuDB
 TELEGRAM_TOKEN = os.getenv("TELEGRAM_TOKEN")
 ADMIN_USER_ID = os.getenv("ADMIN_USER_ID")
 MONGO_DB_URI = os.getenv("MONGO_DB_URI")
+
+client = MongoClient(MONGO_DB_URI)
+db = client["alice"]
+users = db["users"]
 
 
 def zlog(message):
@@ -120,10 +125,9 @@ class Controller:
         # answers.append(("msg", answer))
 
         # Catching new user
-        users = Users()
-        if not users.get_user(self.user_id):
+        if not users.find_one({"telegram_id": self.user_id}):
             user = User(telegram_id=self.user_id)
-            users.add_user(user.to_dict())
+            users.insert_one(user.to_dict())
             answer = "Usuário inserido."
         else:
             answer = "Usuário existente."
