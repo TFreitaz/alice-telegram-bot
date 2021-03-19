@@ -1,7 +1,21 @@
+import os
+
+from pymongo import MongoClient
 from typing import Union, List
 from datetime import datetime
 
-from utils.database import MongoDB
+MONGO_DB_URI = os.getenv("MONGO_DB_URI")
+
+
+class MongoDB:
+    def __init__(self):
+        self.client = MongoClient(MONGO_DB_URI)
+        self.db = self.client["alice"]
+        self.collection = None
+
+    def get_collection(self, collection: str):
+        self.collection = self.db[collection]
+        return self.collection
 
 
 class Chat:
