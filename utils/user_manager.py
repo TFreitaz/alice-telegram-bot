@@ -1,4 +1,5 @@
 import os
+import telebot
 
 from pymongo import MongoClient
 from typing import Union, List
@@ -7,14 +8,21 @@ from datetime import datetime
 MONGO_DB_URI = os.getenv("MONGO_DB_URI")
 
 
+def zlog(message):
+    bot = telebot.TeleBot(TELEGRAM_TOKEN)
+    bot.send_message(ADMIN_USER_ID, message)
+
+
 class MongoDB:
     def __init__(self):
         self.client = MongoClient(MONGO_DB_URI)
         self.db = self.client["alice"]
         self.collection = None
+        zlog("Mongo client criado.")
 
     def get_collection(self, collection: str):
         self.collection = self.db[collection]
+        zlog("Collection obtida")
         return self.collection
 
 
@@ -61,13 +69,16 @@ class Users:
     def __init__(self):
         self.db = MongoDB()
         self.users = self.db.get_collection("users")
+        zlog("Users criado.")
 
     def get_user(self, telegram_id: Union[str, int]):
         if type(telegram_id) == int:
             telegram_id = str(telegram_id)
+        zlog("Usuário pesquisado.")
         return User(**self.users.find_one({"telegram_id": telegram_id}))
 
     def add_user(self, user: User):
+        zlog("Inserindo usuário.")
         if not user.telegram_id:
             raise Exception("User telegram_id parameter must be not null.")
 
@@ -76,6 +87,7 @@ class Users:
 
         if not self.get_user(user.telegram_id):
             self.users.insert_one(user.to_dict())
+            zlog("Usuário inserido.")
             return True
-
+        zlog("Usuário já existente.")
         return False
