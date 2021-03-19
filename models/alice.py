@@ -8,6 +8,7 @@ import requests
 import unidecode
 
 from datetime import datetime, timedelta
+from pymongo import MongoClient
 
 from utils.investments import Stocks
 from utils.user_manager import User, Users
