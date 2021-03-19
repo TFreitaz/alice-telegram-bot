@@ -108,9 +108,9 @@ class Controller:
         # Debugging MongoDB
 
         mongo = MongoDB()
-        coll = mongo.get_collection("users")
+        _ = mongo.get_collection("users")
 
-        data = coll.find_one({})
+        data = mongo.collection.find_one({})
 
         if data:
             answer = json.dumps(data)
