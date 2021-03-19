@@ -17,6 +17,7 @@ from utils.database import HerokuDB
 
 TELEGRAM_TOKEN = os.getenv("TELEGRAM_TOKEN")
 ADMIN_USER_ID = os.getenv("ADMIN_USER_ID")
+MONGO_DB_URI = os.getenv("MONGO_DB_URI")
 
 
 def zlog(message):
@@ -103,6 +104,17 @@ class Controller:
 
     def postscriptum(self):
         answers = []
+
+        # Debugging MongoDB
+
+        client = MongoClient(MONGO_DB_URI)
+        db = client["alice"]
+        collection = db["users"]
+        data = collection.findall({})
+
+        answer = json.dumps(data)
+
+        answers.append(("msg", answer))
 
         # Catching new user
         users = Users()
