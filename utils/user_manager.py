@@ -1,8 +1,9 @@
 import os
-import json
+
+# import json
 import telebot
 
-from typing import Union, List
+from typing import List
 from datetime import datetime
 
 ADMIN_USER_ID = os.getenv("ADMIN_USER_ID")
@@ -54,27 +55,27 @@ class User:
         return obj
 
 
-class Users:
-    def get_user(self, telegram_id: Union[str, int]):
-        if type(telegram_id) == int:
-            telegram_id = str(telegram_id)
-        zlog("Usuário pesquisado.")
-        user = users.find_one({"telegram_id": telegram_id})
-        zlog(json.dumps(user))
-        if user:
-            return User(**user)
+# class Users:
+#     def get_user(self, telegram_id: Union[str, int]):
+#         if type(telegram_id) == int:
+#             telegram_id = str(telegram_id)
+#         zlog("Usuário pesquisado.")
+#         user = users.find_one({"telegram_id": telegram_id})
+#         zlog(json.dumps(user))
+#         if user:
+#             return User(**user)
 
-    def add_user(self, user: User):
-        zlog("Inserindo usuário.")
-        if not user.telegram_id:
-            raise Exception("User telegram_id parameter must be not null.")
+#     def add_user(self, user: User):
+#         zlog("Inserindo usuário.")
+#         if not user.telegram_id:
+#             raise Exception("User telegram_id parameter must be not null.")
 
-        if type(user.telegram_id) == int:
-            user.telegram_id = str(user.telegram_id)
+#         if type(user.telegram_id) == int:
+#             user.telegram_id = str(user.telegram_id)
 
-        if not self.get_user(user.telegram_id):
-            users.insert_one(user.to_dict())
-            zlog("Usuário inserido.")
-            return True
-        zlog("Usuário já existente.")
-        return False
+#         if not self.get_user(user.telegram_id):
+#             users.insert_one(user.to_dict())
+#             zlog("Usuário inserido.")
+#             return True
+#         zlog("Usuário já existente.")
+#         return False
