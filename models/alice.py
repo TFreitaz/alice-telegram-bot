@@ -8,11 +8,10 @@ import requests
 import unidecode
 
 from datetime import datetime, timedelta
-from pymongo import MongoClient
 
 from utils.investments import Stocks
 from utils.user_manager import User, Users
-from utils.database import HerokuDB
+from utils.database import HerokuDB, MongoDB
 
 # from utils.image_tools import cartoon_generator
 
@@ -108,20 +107,23 @@ class Controller:
 
         # Debugging MongoDB
 
-        client = MongoClient(MONGO_DB_URI)
-        db = client["alice"]
-        collection = db["users"]
-        data = collection.find({})
+        mongo = MongoDB()
+        coll = mongo.get_collection("users")
 
-        answer = json.dumps(data)
+        data = coll.find_one({})
+
+        if data:
+            answer = json.dumps(data)
+        else:
+            answer = "Usuário não encontrado."
 
         answers.append(("msg", answer))
 
         # Catching new user
-        users = Users()
-        if not users.get_user(self.user_id):
-            user = User(telegram_id=self.user_id)
-            Users().add_user(user.to_dict())
+        # users = Users()
+        # if not users.get_user(self.user_id):
+        #     user = User(telegram_id=self.user_id)
+        #     Users().add_user(user.to_dict())
 
         return answers
 
