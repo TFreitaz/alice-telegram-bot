@@ -77,7 +77,9 @@ class Users:
         if type(telegram_id) == int:
             telegram_id = str(telegram_id)
         zlog("Usuário pesquisado.")
-        return User(**self.users.find_one({"telegram_id": telegram_id}))
+        user = self.users.find_one({"telegram_id": telegram_id})
+        if user:
+            return User(**user)
 
     def add_user(self, user: User):
         zlog("Inserindo usuário.")

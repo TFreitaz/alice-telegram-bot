@@ -123,7 +123,7 @@ class Controller:
         users = Users()
         if not users.get_user(self.user_id):
             user = User(telegram_id=self.user_id)
-            Users().add_user(user.to_dict())
+            users.add_user(user.to_dict())
             answer = "Usuário inserido."
         else:
             answer = "Usuário existente."
