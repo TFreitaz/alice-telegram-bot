@@ -34,4 +34,4 @@ class HerokuDB:
 
     def get_columns(self, table: str):
         self.cursor.execute(f"SELECT Column_name FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = '{table}'")
-        return self.cursor.fetchall()
+        return [item[0] for item in self.cursor.fetchall()]
