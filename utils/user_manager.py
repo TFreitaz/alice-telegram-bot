@@ -1,6 +1,6 @@
 import os
 
-import json
+# import json
 import telebot
 
 from typing import List, Union
@@ -102,7 +102,7 @@ class Users:
             self.db.connect()
             columns = self.db.get_columns("users")
             user_data = user.to_dict()
-            to_add = {col: user_data[col for col in user_data.keys() if col in columns}
+            to_add = {col: user_data[col] for col in user_data.keys() if col[0] in columns}
             self.db.insert("users", list(to_add.values()), list(to_add.keys()))
             self.db.conn.close()
             return True
