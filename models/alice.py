@@ -10,7 +10,7 @@ import unidecode
 from datetime import datetime, timedelta
 
 from utils.investments import Stocks
-# from utils.user_manager import User
+from utils.user_manager import User, Users
 from utils.database import HerokuDB
 
 # from utils.image_tools import cartoon_generator
@@ -38,6 +38,7 @@ class Controller:
         self.commands = []
         self.helper = Helper()
         self.user_id = None
+        self.user = None
 
     def add_adapter(
         self, reqs=[], comms=[], only_admin=False, after_classification=[], after_commands=[], description="", user_inputs=[]
@@ -87,6 +88,7 @@ class Controller:
         return False
 
     def get_response(self, text=None, image=None):
+        self.get_user()
         self.classific(text)
         # return self.send([("msg", len(self.adapters))])
         for adap in self.adapters:
@@ -100,6 +102,13 @@ class Controller:
                 # ans += self.postscriptum()
                 return self.send(ans)
         # return self.send([("msg", json.dumps(self.classification)), ("msg", json.dumps(self.commands))])
+
+    def get_user(self):
+        users = Users()
+        self.user = users.get_user(self.user_id)
+        if not self.user:
+            self.user = User(telegram_id=self.user_id)
+            users.add_user(self.user)
 
     def postscriptum(self):
         answers = []
