@@ -7,7 +7,6 @@ from typing import List
 from datetime import datetime
 
 ADMIN_USER_ID = os.getenv("ADMIN_USER_ID")
-MONGO_DB_URI = os.getenv("MONGO_DB_URI")
 TELEGRAM_TOKEN = os.getenv("TELEGRAM_TOKEN")
 
 

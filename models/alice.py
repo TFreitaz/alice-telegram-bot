@@ -7,22 +7,16 @@ import telebot
 import requests
 import unidecode
 
-from pymongo import MongoClient
 from datetime import datetime, timedelta
 
 from utils.investments import Stocks
-from utils.user_manager import User
+# from utils.user_manager import User
 from utils.database import HerokuDB
 
 # from utils.image_tools import cartoon_generator
 
 TELEGRAM_TOKEN = os.getenv("TELEGRAM_TOKEN")
 ADMIN_USER_ID = os.getenv("ADMIN_USER_ID")
-MONGO_DB_URI = os.getenv("MONGO_DB_URI")
-
-client = MongoClient(MONGO_DB_URI)
-db = client["alice"]
-users = db["users"]
 
 
 def zlog(message):
@@ -110,35 +104,17 @@ class Controller:
     def postscriptum(self):
         answers = []
 
-        # Debugging MongoDB
-
-        # mongo = MongoDB()
-        # _ = mongo.get_collection("users")
-
-        # data = mongo.collection.find_one({})
-
-        # if data:
-        #     answer = json.dumps(data)
+        # Catching new user
+        # user = users.find_one({"telegram_id": self.user_id})
+        # if not user:
+        #     zlog("Usuário não encontrado. Criando usuário.")
+        #     user = User(telegram_id=self.user_id)
+        #     users.insert_one(user.to_dict())
+        #     answer = "Usuário inserido."
         # else:
-        #     answer = "Usuário não encontrado."
+        #     answer = "Usuário existente."
 
         # answers.append(("msg", answer))
-
-        # Catching new user
-        zlog("Buscando usuário.")
-        zlog(json.dumps(client.list_database_names()))
-        zlog(json.dumps(db.list_collection_names()))
-        user = users.find_one({"telegram_id": self.user_id})
-        zlog("Usuário buscado.")
-        if not user:
-            zlog("Usuário não encontrado. Criando usuário.")
-            user = User(telegram_id=self.user_id)
-            users.insert_one(user.to_dict())
-            answer = "Usuário inserido."
-        else:
-            answer = "Usuário existente."
-
-        answers.append(("msg", answer))
 
         return answers
 
