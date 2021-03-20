@@ -1,6 +1,6 @@
 import os
 
-# import json
+import json
 import telebot
 
 from typing import List, Union
@@ -50,7 +50,7 @@ class User:
         self.db = HerokuDB()
         self.db.cursor.execute(f"SELECT * FROM reminders WHERE telegram_id = '{self.telegram_id}'")
         reminders = self.db.fetchall()
-        columns = self.db.get_columns('reminders')
+        columns = self.db.get_columns("reminders")
         data = [{columns[i][0]: reminder[i] for i in range(len(reminder))} for reminder in reminders]
         self.reminders = [Reminder(**reminder) for reminder in data]
         self.db.conn.close()
@@ -59,7 +59,7 @@ class User:
         self.db = HerokuDB()
         self.db.cursor.execute(f"SELECT * FROM chats WHERE telegram_id = '{self.telegram_id}'")
         chat = self.db.fetchone()
-        columns = self.db.get_columns('chats')
+        columns = self.db.get_columns("chats")
         data = {columns[i][0]: chat[i] for i in range(len(chat))}
         self.chat = [Chat(**chat) for chat in data]
         self.db.conn.close()
@@ -85,7 +85,7 @@ class Users:
         self.db.cursor.execute(f"SELECT * FROM users WHERE telegram_id = '{telegram_id}'")
         content = self.db.cursor.fetchone()
         if content:
-            columns = self.db.get_columns('users')
+            columns = self.db.get_columns("users")
             user_data = {columns[i][0]: content[i] for i in range(len(columns))}
             user = User(**user_data)
         self.db.conn.close()
@@ -100,10 +100,11 @@ class Users:
 
         if not self.get_user(user.telegram_id):
             self.db.connect()
-            columns = self.db.get_columns('users')
+            columns = self.db.get_columns("users")
             user_data = user.to_dict()
+            zlog(json.dumps(user_data))
             to_add = {col: user_data[col] for col in user_data.keys() if col in columns}
-            self.db.insert('users', list(to_add.values()), list(to_add.keys()))
+            self.db.insert("users", list(to_add.values()), list(to_add.keys()))
             self.db.conn.close()
             return True
         return False
