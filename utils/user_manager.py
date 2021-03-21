@@ -99,6 +99,7 @@ class Users:
         if content:
             columns = self.db.get_columns("users")
             user_data = {columns[i][0]: content[i] for i in range(len(columns))}
+            zlog(json.dumps(user_data))
             user = User(**user_data)
         self.db.conn.close()
         return user
