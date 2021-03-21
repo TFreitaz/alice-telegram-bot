@@ -9,7 +9,7 @@ import numpy as np
 from scipy.optimize import minimize_scalar, curve_fit
 from datetime import datetime
 
-from utils.database import DataBase
+from utils.database import HerokuDB
 
 
 class Stocks:
@@ -100,7 +100,7 @@ class Stocks:
         }
 
         popt, pcov = curve_fit(self.poly1, xdata[p:], ydata[p:])
-        y_ = [self.poly1(x, *popt) for x in xdata[p:]]
+        # y_ = [self.poly1(x, *popt) for x in xdata[p:]]
 
         # if False:
 
@@ -112,7 +112,7 @@ class Stocks:
         return
 
     def top_stocks(self, n):
-        db = DataBase()
+        db = HerokuDB()
 
         cmd = f"SELECT * FROM stocks ORDER BY score DESC LIMIT {n}"
         db.cursor.execute(cmd)

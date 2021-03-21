@@ -261,6 +261,14 @@
         "filme",
         "filmes"
     ],
+    "name": [
+        "nome",
+        "name",
+        "nick",
+        "nickname",
+        "username",
+        "apelido"
+    ],
     "nao": [
         "nao",
         "negativo",

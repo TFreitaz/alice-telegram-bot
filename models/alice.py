@@ -9,12 +9,19 @@ import unidecode
 
 from datetime import datetime, timedelta
 
-from utils.database import DataBase
 from utils.investments import Stocks
-from utils.image_tools import cartoon_generator
+from utils.user_manager import User, Users
+from utils.database import HerokuDB
+
+# from utils.image_tools import cartoon_generator
 
 TELEGRAM_TOKEN = os.getenv("TELEGRAM_TOKEN")
 ADMIN_USER_ID = os.getenv("ADMIN_USER_ID")
+
+
+def zlog(message):
+    bot = telebot.TeleBot(TELEGRAM_TOKEN)
+    bot.send_message(ADMIN_USER_ID, message)
 
 
 class Helper:
@@ -31,6 +38,7 @@ class Controller:
         self.commands = []
         self.helper = Helper()
         self.user_id = None
+        self.user = None
 
     def add_adapter(
         self, reqs=[], comms=[], only_admin=False, after_classification=[], after_commands=[], description="", user_inputs=[]
@@ -57,13 +65,15 @@ class Controller:
         return create_adapter
 
     def classific(self, message):
+        self.classification = []
+        self.commands = []
         for word in self.classes.keys():
             if any(x in self.classes[word] for x in ClearText(message).split()):
                 self.classification.append(word)
 
         for word in message.split():
             if word.startswith("/"):
-                self.commands.append(f'{ClearText(word).replace(" ", "")}')
+                self.commands.append(word[1:])
 
     def match(self, reqs=None, comms=None):
         if reqs:
@@ -72,10 +82,13 @@ class Controller:
         if comms:
             if all(x in self.commands for x in comms):
                 return True
+        if not (reqs or comms):
+            return True
 
         return False
 
     def get_response(self, text=None, image=None):
+        self.get_user()
         self.classific(text)
         # return self.send([("msg", len(self.adapters))])
         for adap in self.adapters:
@@ -86,8 +99,27 @@ class Controller:
                 self.commands = []
                 raise e
             if ans:
+                ans += self.postscriptum()
                 return self.send(ans)
         # return self.send([("msg", json.dumps(self.classification)), ("msg", json.dumps(self.commands))])
+
+    def get_user(self):
+        users = Users()
+        self.user = users.get_user(self.user_id)
+        if not self.user:
+            self.user = User(telegram_id=self.user_id)
+            users.add_user(self.user)
+
+    def postscriptum(self):
+        answers = []
+
+        if not self.user.nickname:
+            answer = "Eu ainda não sei como te chamar."
+            answer += " Você pode definir como quer ser chamado usando o comando /definir_nome"
+            answer += " seguido do seu nome ou apelido."
+            answers.append(("msg", answer))
+
+        return answers
 
     def send(self, ans):
         self.answer = ans
@@ -177,6 +209,27 @@ def Cancelar(message, **fields):
     answer = []
     answer.append(("msg", "Tudo bem. Como posso te ajudar então?"))
     return answer
+
+
+@controller.add_adapter(comms=["definir_nome"], description="Definir seu nome ou apelido", user_inputs=["nome"])
+def SetName(message, **fields):
+    answers = []
+
+    name = message.replace("/definir_nome", "").strip()
+    while "  " in name:
+        name = name.replace("  ", " ")
+
+    if name:
+        controller.user.nickname = name
+        controller.user.update()
+
+        answer = f"Ok! Vou te chamar de {name}"
+        answers.append(("msg", answer))
+    else:
+        answer = "Não consegui reconhecer um nome. Por favor envie /definir_nome seguido do seu nome ou apelido."
+        answers.append(("msg", answer))
+
+    return answers
 
 
 @controller.add_adapter(
@@ -334,29 +387,29 @@ def Suggestion(message, **fields):
     return answers
 
 
-@controller.add_adapter(
-    reqs=["cartoon"], comms=["cartoon"], only_admin=True, description="Gerar versão cartoon de uma imagem", user_inputs=["imagem"]
-)
-def Cartoon(message, **fields):
-    answers = []
+# @controller.add_adapter(
+#     reqs=["cartoon"], comms=["cartoon"], only_admin=True, description="Gerar versão cartoon de uma imagem", user_inputs=["imagem"]
+# )
+# def Cartoon(message, **fields):
+#     answers = []
 
-    image = fields.get("image", None)
+#     image = fields.get("image", None)
 
-    if not image:
-        answer = "Me mande uma imagem para eu transformar em cartoon!"
-        answers.append(("msg", answer))
-    else:
-        answer1 = "Aqui está seu cartoon! Espero que goste ^^"
-        k = 9
-        numbers = re.findall(r"\d+", message)
-        if len(numbers) > 0:
-            k = numbers[0]
+#     if not image:
+#         answer = "Me mande uma imagem para eu transformar em cartoon!"
+#         answers.append(("msg", answer))
+#     else:
+#         answer1 = "Aqui está seu cartoon! Espero que goste ^^"
+#         k = 9
+#         numbers = re.findall(r"\d+", message)
+#         if len(numbers) > 0:
+#             k = numbers[0]
 
-        answer2 = cartoon_generator(image, k)
+#         answer2 = cartoon_generator(image, k)
 
-        answers.append(("msg", answer1))
-        answers.append(("img", answer2))
-    return answers
+#         answers.append(("msg", answer1))
+#         answers.append(("img", answer2))
+#     return answers
 
 
 @controller.add_adapter(
@@ -433,7 +486,7 @@ def Agradecimento(message, **fields):
 def Secred_link_generate(message, **fields):
     answers = []
     log = ""
-    db = DataBase()
+    db = HerokuDB()
     try:
         n = int(re.findall(r"\d+", message)[0])
     except Exception:
@@ -463,7 +516,7 @@ def Secred_link_generate(message, **fields):
 )
 def Secred_link_add(message, **fields):
     answers = []
-    db = DataBase()
+    db = HerokuDB()
     links = get_link(message)
     log = ""
     if len(links) > 0:
@@ -507,7 +560,7 @@ def Test(message, **fields):
     return answers
 
 
-@controller.add_adapter(reqs=[], comms=[])
+@controller.add_adapter()
 def Undefined(message, **fields):
     answers = []
     answer = "Sinto muito, mas não entendi."

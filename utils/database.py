@@ -1,7 +1,8 @@
 import os
 import psycopg2
 
-DATABASE_URL = os.getenv("DATABASE_URL")
+
+HEROKU_DB_URL = os.getenv("HEROKU_DB_URL")
 
 
 def create_cmd(table, columns):
@@ -15,13 +16,13 @@ def set_value(value: str):
     return f"'{value}'"
 
 
-class DataBase:
+class HerokuDB:
     def __init__(self):
         self.connect()
 
     def connect(self):
         # self.conn = psycopg2.connect(database=DATABASE, host=HOST, password=PASSWORD, user=USER, port=PORT)
-        self.conn = psycopg2.connect(DATABASE_URL)
+        self.conn = psycopg2.connect(HEROKU_DB_URL)
         self.cursor = self.conn.cursor()
 
     def insert(self, table, values, columns=[]):
@@ -30,3 +31,23 @@ class DataBase:
             cmd += "(" + ", ".join(columns) + ")"
         cmd += " VALUES (" + ", ".join(map(set_value, values)) + ");"
         self.cursor.execute(cmd)
+        self.conn.commit()
+
+    def update(self, table, condition, **fields):
+        columns = fields.get("columns", [])
+        values = fields.get("values", [])
+        data = fields.get("data", {})
+
+        if columns and values:
+            data = {columns[i]: values[i] for i in range(len(values))}
+
+        cmd = f"UPDATE {table} SET "
+        cmd += ", ".join([f"{key} = '{data[key]}'" for key in data.keys()])
+        cmd += f" WHERE {condition}"
+
+        self.cursor.execute(cmd)
+        self.conn.commit()
+
+    def get_columns(self, table: str):
+        self.cursor.execute(f"SELECT Column_name FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = '{table}'")
+        return [item[0] for item in self.cursor.fetchall()]
