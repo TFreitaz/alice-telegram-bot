@@ -16,7 +16,7 @@ from utils.database import HerokuDB
 # from utils.image_tools import cartoon_generator
 
 TELEGRAM_TOKEN = os.getenv("TELEGRAM_TOKEN")
-ADMIN_USER_ID = os.getenv("ADMIN_USER_ID")
+ADMIN_USER_ID = int(str(os.getenv("ADMIN_USER_ID")))
 
 
 def zlog(message):
@@ -191,7 +191,7 @@ def Help(message, **fields):
             answer += "\n"
     if answer.endswith("\n"):
         answer = answer[:-1]
-    answer += '\nPara mais informações, acesse: http://bit.ly/alice-readme'
+    answer += "\n\nPara mais informações, acesse: http://bit.ly/alice-readme"
     answers.append(("msg", answer))
     return answers
 
