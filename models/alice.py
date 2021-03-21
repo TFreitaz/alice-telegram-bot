@@ -73,7 +73,7 @@ class Controller:
 
         for word in message.split():
             if word.startswith("/"):
-                self.commands.append(f'{ClearText(word).replace(" ", "")}')
+                self.commands.append(word[1:])
 
     def match(self, reqs=None, comms=None):
         if reqs:
