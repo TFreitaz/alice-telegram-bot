@@ -38,7 +38,6 @@ class Reminder:
 
 class User:
     def __init__(self, **fields):
-        self.db: HerokuDB = None
         self.nickname: str = fields.get("nickname", "")
         self.telegram_id: str = fields.get("telegram_id", "")
         if not str(self.telegram_id).isnumeric:
@@ -65,7 +64,7 @@ class User:
         self.db.conn.close()
 
     def to_dict(self) -> dict:
-        obj = self.__dict__
+        obj = self.__dict__.copy()
         for key in list(obj.keys()):
             if isinstance(obj[key], datetime):
                 obj[key] = obj[key].isoformat()
@@ -76,23 +75,14 @@ class User:
         return obj
 
     def update(self):
-        zlog("Criando banco.")
         self.db = HerokuDB()
-        zlog("Obtendo dicionário.")
         user_data = self.to_dict()
-        zlog("Obtendo colunas de users.")
         users_columns = self.db.get_columns("users")
-        zlog("Gerando dados.")
         to_add = {col: user_data[col] for col in user_data.keys() if col in users_columns}
-        zlog("Atualizando users.")
         self.db.update("users", f"telegram_id = '{self.telegram_id}'", data=to_add)
-        zlog("Obtendo colunas de chats.")
         chats_columns = self.db.get_columns("chats")
-        zlog("Gerando dados.")
         to_add = {col: user_data[col] for col in user_data.keys() if col in chats_columns}
-        zlog("Atualizando chats")
         self.db.update("chats", f"telegram_id = '{self.telegram_id}'", data=to_add)
-        zlog("Encerrando banco.")
         self.db.conn.close()
 
 
