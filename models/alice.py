@@ -219,11 +219,15 @@ def SetName(message, **fields):
     while "  " in name:
         name = name.replace("  ", " ")
 
-    controller.user.nickname = name
-    controller.user.update()
+    if name:
+        controller.user.nickname = name
+        controller.user.update()
 
-    answer = f"Ok! Vou te chamar de {name}"
-    answers.append(("msg", answer))
+        answer = f"Ok! Vou te chamar de {name}"
+        answers.append(("msg", answer))
+    else:
+        answer = "Não consegui reconhecer um nome. Por favor envie /definir_nome seguido do seu nome ou apelido."
+        answers.append(("msg", answer))
 
     return answers
 
