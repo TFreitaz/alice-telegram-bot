@@ -1,6 +1,5 @@
 import os
 
-import json
 import telebot
 
 from typing import List, Union
@@ -74,6 +73,17 @@ class User:
             if type(obj[key]) not in [str, int, float, list, dict, tuple, set]:
                 del obj[key]
         return obj
+
+    def update(self):
+        self.db = HerokuDB()
+        user_data = self.user.to_dict()
+        users_columns = self.db.get_columns("users")
+        to_add = {col: user_data[col] for col in user_data.keys() if col in users_columns}
+        self.db.update("users", f"telegram_id = '{self.user.telegram_id}'", data=to_add)
+        chats_columns = self.db.get_columns("chats")
+        to_add = {col: user_data[col] for col in user_data.keys() if col in chats_columns}
+        self.db.update("chats", f"telegram_id = '{self.user.telegram_id}'", data=to_add)
+        self.db.conn.close()
 
 
 class Users:

@@ -33,6 +33,21 @@ class HerokuDB:
         self.cursor.execute(cmd)
         self.conn.commit()
 
+    def update(self, table, condition, **fields):
+        columns = fields.get("columns", [])
+        values = fields.get("values", [])
+        data = fields.get("data", {})
+
+        if columns and values:
+            data = {columns[i]: values[i] for i in range(len(values))}
+
+        cmd = f"UPDATE {table} SET "
+        cmd += ", ".join([f"{key} = '{data[key]}'" for key in data.keys()])
+        cmd += f" WHERE {condition}"
+
+        self.cursor.execute(cmd)
+        self.conn.commit()
+
     def get_columns(self, table: str):
         self.cursor.execute(f"SELECT Column_name FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = '{table}'")
         return [item[0] for item in self.cursor.fetchall()]
