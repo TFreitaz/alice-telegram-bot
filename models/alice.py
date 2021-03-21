@@ -119,18 +119,6 @@ class Controller:
             answer += " seguido do seu nome ou apelido."
             answers.append(("msg", answer))
 
-        # Catching new user
-        # user = users.find_one({"telegram_id": self.user_id})
-        # if not user:
-        #     zlog("Usuário não encontrado. Criando usuário.")
-        #     user = User(telegram_id=self.user_id)
-        #     users.insert_one(user.to_dict())
-        #     answer = "Usuário inserido."
-        # else:
-        #     answer = "Usuário existente."
-
-        # answers.append(("msg", answer))
-
         return answers
 
     def send(self, ans):
