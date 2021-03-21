@@ -16,7 +16,7 @@ from utils.database import HerokuDB
 # from utils.image_tools import cartoon_generator
 
 TELEGRAM_TOKEN = os.getenv("TELEGRAM_TOKEN")
-ADMIN_USER_ID = os.getenv("ADMIN_USER_ID")
+ADMIN_USER_ID = int(str(os.getenv("ADMIN_USER_ID")))
 
 
 def zlog(message):
@@ -112,9 +112,6 @@ class Controller:
 
     def postscriptum(self):
         answers = []
-
-        zlog(str(type(ADMIN_USER_ID)))
-        zlog(str(type(controller.user_id)))
 
         if not self.user.nickname:
             answer = "Eu ainda não sei como te chamar."
