@@ -222,6 +222,9 @@ def SetName(message, **fields):
     controller.user.nickname = name
     controller.user.update()
 
+    answer = f"Ok! Vou te chamar de {name}"
+    answers.append(("msg", answer))
+
     return answers
 
 
