@@ -207,7 +207,10 @@ def Start(message, **fields):
 @controller.add_adapter(reqs=["cancelar"])
 def Cancelar(message, **fields):
     answer = []
-    answer.append(("msg", "Tudo bem. Como posso te ajudar então?"))
+    name_text = ""
+    if controller.user.nickname:
+        name_text = ", " + controller.user.nickname
+    answer.append(("msg", f"Tudo bem{name_text}. Como posso te ajudar então?"))
     return answer
 
 
@@ -483,22 +486,30 @@ def Agradecimento(message, **fields):
 @controller.add_adapter(
     comms=["secret", "link", "generate"], only_admin=True, description="Salvar link em modo secreto", user_inputs=["link"]
 )
-def Secred_link_generate(message, **fields):
+def SecredLinkGenerate(message, **fields):
     answers = []
     log = ""
     db = HerokuDB()
     try:
         n = int(re.findall(r"\d+", message)[0])
     except Exception:
-        log = "Não identifiquei o número."
+        if controller.user.nickname:
+            log = f"{controller.user.nickname}, não identifiquei o número."
+        else:
+            log = "Não identifiquei o número."
     else:
         cmd = f"SELECT link FROM links ORDER BY random() LIMIT {n}"
         db.cursor.execute(cmd)
         links = db.cursor.fetchall()
         if len(links) == 0:
-            log += "Não encontrei nenhum link salvo."
+            if controller.user.nickname:
+                log = f"{controller.user.nickname}, não encontrei nenhum link salvo."
+            else:
+                log = "Não encontrei nenhum link salvo."
         else:
-            answer1 = "Aqui está!\n"
+            if controller.user.nickname:
+                name_text = f"{controller.user.nickname}, "
+            answer1 = f"Aqui está{name_text}!\n"
             answer1 += "\n\n".join(link[0] for link in links)
             answers.append(("msg", answer1))
         db.conn.close()
@@ -514,19 +525,22 @@ def Secred_link_generate(message, **fields):
     description="Gerar conjunto de links secretos salvos",
     user_inputs=["número de links"],
 )
-def Secred_link_add(message, **fields):
+def SecredLinkAdd(message, **fields):
     answers = []
     db = HerokuDB()
     links = get_link(message)
     log = ""
+    name_text = ""
+    if controller.user.nickname:
+        name_text = f", {controller.user.nickname}"
     if len(links) > 0:
         for link in links:
             source = re.search(r"\w*\.(com|net)", link).group().split(".")[0]
             db.insert("links", [controller.user_id, source, link], ["user_id", "source", "link"])
         db.conn.commit()
-        answer1 = "Prontinho!"
+        answer1 = f"Prontinho{name_text}!"
     else:
-        answer1 = "Não recebi nenhum link."
+        answer1 = f"Não recebi nenhum link{name_text}."
     db.conn.close()
     answers.append(("msg", answer1))
     if log:
@@ -563,6 +577,9 @@ def Test(message, **fields):
 @controller.add_adapter()
 def Undefined(message, **fields):
     answers = []
-    answer = "Sinto muito, mas não entendi."
+    name_text = ""
+    if controller.user.nickname:
+        name_text = f", {controller.user.nickname}"
+    answer = f"Sinto muito{name_text}. Não entendi."
     answers.append(("msg", answer))
     return answers
