@@ -117,7 +117,7 @@ class Controller:
             answer = "Eu ainda não sei como te chamar."
             answer += " Você pode definir como quer ser chamado usando o comando /definir_nome"
             answer += " seguido do seu nome ou apelido."
-            answers.append('msg', answer)
+            answers.append(("msg", answer))
 
         # Catching new user
         # user = users.find_one({"telegram_id": self.user_id})
