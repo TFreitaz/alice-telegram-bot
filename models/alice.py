@@ -483,7 +483,7 @@ def Agradecimento(message, **fields):
 @controller.add_adapter(
     comms=["secret", "link", "generate"], only_admin=True, description="Salvar link em modo secreto", user_inputs=["link"]
 )
-def Secred_link_generate(message, **fields):
+def SecredLinkGenerate(message, **fields):
     answers = []
     log = ""
     db = HerokuDB()
@@ -514,7 +514,7 @@ def Secred_link_generate(message, **fields):
     description="Gerar conjunto de links secretos salvos",
     user_inputs=["número de links"],
 )
-def Secred_link_add(message, **fields):
+def SecredLinkAdd(message, **fields):
     answers = []
     db = HerokuDB()
     links = get_link(message)
