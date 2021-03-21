@@ -113,6 +113,12 @@ class Controller:
     def postscriptum(self):
         answers = []
 
+        if not self.user.nickname:
+            answer = "Eu ainda não sei como te chamar."
+            answer += " Você pode definir como quer ser chamado usando o comando /definir_nome"
+            answer += " seguido do seu nome ou apelido."
+            answers.append('msg', answer)
+
         # Catching new user
         # user = users.find_one({"telegram_id": self.user_id})
         # if not user:
@@ -215,6 +221,20 @@ def Cancelar(message, **fields):
     answer = []
     answer.append(("msg", "Tudo bem. Como posso te ajudar então?"))
     return answer
+
+
+@controller.add_adapter(comms=["definir_nome"], description="Definir seu nome ou apelido", user_inputs=["nome"])
+def SetName(message, **fields):
+    answers = []
+
+    name = message.replace("/definir_nome", "").strip()
+    while "  " in name:
+        name = name.replace("  ", " ")
+
+    controller.user.nickname = name
+    controller.user.update()
+
+    return answers
 
 
 @controller.add_adapter(
