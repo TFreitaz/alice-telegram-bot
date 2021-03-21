@@ -113,6 +113,8 @@ class Controller:
     def postscriptum(self):
         answers = []
 
+        zlog(ADMIN_USER_ID)
+
         if not self.user.nickname:
             answer = "Eu ainda não sei como te chamar."
             answer += " Você pode definir como quer ser chamado usando o comando /definir_nome"
@@ -191,7 +193,7 @@ def Help(message, **fields):
             answer += "\n"
     if answer.endswith("\n"):
         answer = answer[:-1]
-    answer += '\nPara mais informações, acesse: http://bit.ly/alice-readme'
+    answer += "\n\nPara mais informações, acesse: http://bit.ly/alice-readme"
     answers.append(("msg", answer))
     return answers
 
