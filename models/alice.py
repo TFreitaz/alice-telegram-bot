@@ -113,7 +113,8 @@ class Controller:
     def postscriptum(self):
         answers = []
 
-        zlog(ADMIN_USER_ID)
+        zlog(str(type(ADMIN_USER_ID)))
+        zlog(str(type(controller.user_id)))
 
         if not self.user.nickname:
             answer = "Eu ainda não sei como te chamar."
