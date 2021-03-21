@@ -1,5 +1,5 @@
 import os
-import json
+
 import telebot
 
 from typing import List, Union
@@ -79,8 +79,6 @@ class User:
         user_data = self.to_dict()
         users_columns = self.db.get_columns("users")
         to_add = {col: user_data[col] for col in user_data.keys() if col in users_columns}
-        zlog(json.dumps(user_data))
-        zlog(json.dumps(to_add))
         self.db.update("users", f"telegram_id = '{self.telegram_id}'", data=to_add)
         chats_columns = self.db.get_columns("chats")
         to_add = {col: user_data[col] for col in user_data.keys() if col in chats_columns}
@@ -98,8 +96,7 @@ class Users:
         content = self.db.cursor.fetchone()
         if content:
             columns = self.db.get_columns("users")
-            user_data = {columns[i][0]: content[i] for i in range(len(columns))}
-            zlog(json.dumps(user_data))
+            user_data = {columns[i]: content[i] for i in range(len(columns))}
             user = User(**user_data)
         self.db.conn.close()
         return user
