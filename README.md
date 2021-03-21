@@ -12,9 +12,9 @@
 
 <p>No Telegram, busque pelo usuário <i>@alice_zbot</i> ou <a href=https://t.me/alice_zbot>clique aqui</a>. Você será direcionado ao chat <b>Alice</b>.</p>
 
-<p>Agora, se essa for a sua primeira conversa com a Alice, verá um grande botão escrito <b>Start</b>. Clique nele, e ela te atenderá. Caso já tenha um histórico de conversa com ela, não verá o botão, mas também terá o mesmo resultado se enviar uma mensagem com o comando ``/start`` . Ou ainda, você pode pular esta etapa e já partir para a conversa.</p> 
+<p>Agora, se essa for a sua primeira conversa com a Alice, verá um grande botão escrito <b>Start</b>. Clique nele, e ela te atenderá. Caso já tenha um histórico de conversa com ela, não verá o botão, mas também terá o mesmo resultado se enviar uma mensagem com o comando `/start`. Ou ainda, você pode pular esta etapa e já partir para a conversa.</p> 
 
-<p>A Alice é desenvolvida visando ter uma conversa natural com o usuário. Dessa forma, esperamos que você consiga usar suas funcionalidades apenas pedindo, como faria com um humano qualquer. Ainda assim, todas as ações podem ser acionadas através de comandos iniciados com uma barra (```/```). Para ter uma lista de todas as funcionalidades disponíveis, basta enviar o comando ```/help```.</p>
+<p>A Alice é desenvolvida visando ter uma conversa natural com o usuário. Dessa forma, esperamos que você consiga usar suas funcionalidades apenas pedindo, como faria com um humano qualquer. Ainda assim, todas as ações podem ser acionadas através de comandos iniciados com uma barra (```/```). Para ter uma lista de todas as funcionalidades disponíveis, basta enviar o comando <code>/help</code>.</p>
 
 ## Funcionalidades
 
