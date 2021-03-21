@@ -31,7 +31,7 @@ class HerokuDB:
             cmd += "(" + ", ".join(columns) + ")"
         cmd += " VALUES (" + ", ".join(map(set_value, values)) + ");"
         self.cursor.execute(cmd)
-        self.cursor.commit()
+        self.conn.commit()
 
     def get_columns(self, table: str):
         self.cursor.execute(f"SELECT Column_name FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = '{table}'")
