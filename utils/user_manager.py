@@ -38,6 +38,7 @@ class Reminder:
 
 class User:
     def __init__(self, **fields):
+        self.db: HerokuDB = None
         self.nickname: str = fields.get("nickname", "")
         self.telegram_id: str = fields.get("telegram_id", "")
         if not str(self.telegram_id).isnumeric:
