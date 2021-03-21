@@ -580,6 +580,6 @@ def Undefined(message, **fields):
     name_text = ""
     if controller.user.nickname:
         name_text = f", {controller.user.nickname}"
-    answer = f"Sinto muito{name_text}, mas não entendi."
+    answer = f"Sinto muito{name_text}. Não entendi."
     answers.append(("msg", answer))
     return answers
