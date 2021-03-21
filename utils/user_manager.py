@@ -76,14 +76,23 @@ class User:
         return obj
 
     def update(self):
+        zlog("Criando banco.")
         self.db = HerokuDB()
+        zlog("Obtendo dicionário.")
         user_data = self.to_dict()
+        zlog("Obtendo colunas de users.")
         users_columns = self.db.get_columns("users")
+        zlog("Gerando dados.")
         to_add = {col: user_data[col] for col in user_data.keys() if col in users_columns}
+        zlog("Atualizando users.")
         self.db.update("users", f"telegram_id = '{self.telegram_id}'", data=to_add)
+        zlog("Obtendo colunas de chats.")
         chats_columns = self.db.get_columns("chats")
+        zlog("Gerando dados.")
         to_add = {col: user_data[col] for col in user_data.keys() if col in chats_columns}
+        zlog("Atualizando chats")
         self.db.update("chats", f"telegram_id = '{self.telegram_id}'", data=to_add)
+        zlog("Encerrando banco.")
         self.db.conn.close()
 
 
