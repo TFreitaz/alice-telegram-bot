@@ -485,12 +485,10 @@ def Pokemon(message, **fields):
 @controller.add_adapter(reqs=["agradecimento"])
 def Agradecimento(message, **fields):
     answers = []
-    name_text = ''
+    name_text = ""
     if controller.user.nickname:
-        name_text = f', {controller.user.nickname}'
+        name_text = f", {controller.user.nickname}"
     answer = f"Disponha{name_text}! Se precisar, é só chamar."
-    blocks = ["agradecimento"]
-    controller.classification = list(filter(lambda a: a not in blocks, controller.classification))
     answers.append(("msg", answer))
     return answers
 
