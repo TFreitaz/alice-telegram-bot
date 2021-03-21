@@ -191,6 +191,7 @@ def Help(message, **fields):
             answer += "\n"
     if answer.endswith("\n"):
         answer = answer[:-1]
+    answer += '\nPara mais informações, acesse: http://bit.ly/alice-readme'
     answers.append(("msg", answer))
     return answers
 
