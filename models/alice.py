@@ -247,6 +247,9 @@ def Reminder(message, **fields):
     token = os.getenv("REMINDER_API_TOKEN")
     answers = []
 
+    name_text = ""
+    name = controller.user.nickname
+
     url = "https://reminders-api.com/api/applications/48/reminders"
 
     header = {"Authorization": f"Bearer {token}"}
@@ -367,10 +370,15 @@ def Reminder(message, **fields):
         hh = str(int(hh) - 3)
         if len(hh) == 1:
             hh = "0" + hh
-        answer = f'Pronto! Lembrete "{resp["title"]}" programado para as {hh}:{mm}h de {dd}/{MM}/{aaaa}.'
+        if name:
+            name_text = f", {name}"
+        answer = f'Prontinho{name_text}! Lembrete "{resp["title"]}" programado para as {hh}:{mm}h de {dd}/{MM}/{aaaa}.'
 
     else:
-        answer = "Não consegui criar o lembrete. Você pode verificar a mensagem e tentar novamente."
+        if name:
+            answer = f"{name}, não consegui criar o lembrete. Você pode verificar a mensagem e tentar novamente."
+        else:
+            answer = "Não consegui criar o lembrete. Você pode verificar a mensagem e tentar novamente."
         answer2 = json.dumps(payload)
         answers.append(("msg", answer2))
 
@@ -477,9 +485,10 @@ def Pokemon(message, **fields):
 @controller.add_adapter(reqs=["agradecimento"])
 def Agradecimento(message, **fields):
     answers = []
-    answer = "Se precisar, é só chamar."
-    blocks = ["agradecimento"]
-    controller.classification = list(filter(lambda a: a not in blocks, controller.classification))
+    name_text = ""
+    if controller.user.nickname:
+        name_text = f", {controller.user.nickname}"
+    answer = f"Disponha{name_text}! Se precisar, é só chamar."
     answers.append(("msg", answer))
     return answers
 
