@@ -354,7 +354,7 @@ def SetReminder(message, **fields):
         payload["title"] = "Reminder"
 
     if hh and mm:
-        time_tz = local2utc(datetime.strptime(f"{hh}:{mm}", "%H:%M")).strptime("%H:%M")
+        time_tz = local2utc(datetime.strptime(f"{hh}:{mm}", "%H:%M")).strftime("%H:%M")
         payload["time_tz"] = time_tz
     else:
         payload["time_tz"] = (now + timedelta(hours=4)).strftime("%H:%M")
