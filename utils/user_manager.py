@@ -82,12 +82,12 @@ class User:
         self.db.update("users", f"telegram_id = '{self.telegram_id}'", data=to_add)
         chats_columns = self.db.get_columns("chats")
         to_add = {"telegram_id": self.telegram_id}
-        to_add.update({col: user_data["chat"][col] for col in user_data.keys() if col in chats_columns})
+        to_add = {col: user_data["chat"][col] for col in user_data["chat"].keys() if col in chats_columns}
         self.db.update("chats", f"telegram_id = '{self.telegram_id}'", data=to_add)
         reminders_columns = self.db.get_columns("reminders")
-        to_add = {"telegram_id": self.telegram_id}
         for reminder in user_data["reminders"]:
-            to_add.update({col: reminder[col] for col in user_data.keys() if col in reminders_columns})
+            to_add = {col: reminder[col] for col in reminder.keys() if col in reminders_columns}
+            to_add["telegram_id"] = self.telegram_id
             self.db.update(
                 "chats",
                 f"telegram_id = '{self.telegram_id}' AND reminder_id = '{reminder['reminder_id']}'",
