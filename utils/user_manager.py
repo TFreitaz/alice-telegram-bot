@@ -80,15 +80,23 @@ class User:
         users_columns = self.db.get_columns("users")
         to_add = {col: user_data[col] for col in user_data.keys() if col in users_columns}
         self.db.update("users", f"telegram_id = '{self.telegram_id}'", data=to_add)
+        zlog("Updated users")
         chats_columns = self.db.get_columns("chats")
-        to_add = {col: user_data['chat'][col] for col in user_data.keys() if col in chats_columns}
-        to_add['telegram_id'] = self.telegram_id
+        to_add = {col: user_data["chat"][col] for col in user_data.keys() if col in chats_columns}
+        to_add["telegram_id"] = self.telegram_id
         self.db.update("chats", f"telegram_id = '{self.telegram_id}'", data=to_add)
+        zlog("Updated chats")
         reminders_columns = self.db.get_columns("reminders")
-        for reminder in user_data['reminders']:
+        for reminder in user_data["reminders"]:
             to_add = {col: reminder[col] for col in user_data.keys() if col in reminders_columns}
-            to_add['telegram_id'] = self.telegram_id
-            self.db.update("chats", f"telegram_id = '{self.telegram_id}' AND reminder_id = '{reminder['reminder_id']}'", persist=True, data=to_add)
+            to_add["telegram_id"] = self.telegram_id
+            self.db.update(
+                "chats",
+                f"telegram_id = '{self.telegram_id}' AND reminder_id = '{reminder['reminder_id']}'",
+                persist=True,
+                data=to_add,
+            )
+        zlog("Updated reminders")
         self.db.conn.close()
 
 
