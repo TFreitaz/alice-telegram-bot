@@ -164,6 +164,7 @@ def get_link(ans):
 
 
 def local2utc(dt):
+    zlog(df.isoformat())
     return dt.replace(tzinfo=pytz.timezone("Brazil/East")).astimezone(pytz.timezone("UTC"))
 
 
@@ -354,8 +355,10 @@ def SetReminder(message, **fields):
         payload["title"] = "Reminder"
 
     if hh and mm:
+        zlog("Convertendo horário recebido.")
         time_tz = local2utc(datetime.strptime(f"{hh}:{mm}", "%H:%M")).strftime("%H:%M")
         payload["time_tz"] = time_tz
+        zlog(f"Horário convertido: {time_tz}")
     else:
         payload["time_tz"] = (now + timedelta(hours=4)).strftime("%H:%M")
 
