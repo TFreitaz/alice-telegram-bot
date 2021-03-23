@@ -164,7 +164,6 @@ def get_link(ans):
 
 
 def local2utc(dt):
-    zlog(dt.isoformat())
     return dt.replace(tzinfo=pytz.timezone("Brazil/East")).astimezone(pytz.timezone("UTC"))
 
 
@@ -355,10 +354,8 @@ def SetReminder(message, **fields):
         payload["title"] = "Reminder"
 
     if hh and mm:
-        zlog("Convertendo horário recebido.")
         time_tz = local2utc(datetime.strptime(f"{hh}:{mm}", "%H:%M")).strftime("%H:%M")
         payload["time_tz"] = time_tz
-        zlog(f"Horário convertido: {time_tz}")
     else:
         payload["time_tz"] = (now + timedelta(hours=4)).strftime("%H:%M")
 
@@ -368,7 +365,7 @@ def SetReminder(message, **fields):
         payload["date_tz"] = reminder_date
     else:
         reminder_datetime = now.strftime("%Y-%m-%d") + f' {payload["time_tz"]}'
-        reminder_datetime = datetime.strptime(reminder_datetime, "%Y-%m-%d %H:%M").replace(tzinfo=pytz.timezone("Brazil/East"))
+        reminder_datetime = datetime.strptime(reminder_datetime, "%Y-%m-%d %H:%M:%S").replace(tzinfo=pytz.timezone("Brazil/East"))
         if (reminder_datetime - now).days < 0:
             reminder_datetime = reminder_datetime + timedelta(days=1)
         payload["date_tz"] = reminder_datetime.strftime("%Y-%m-%d")
