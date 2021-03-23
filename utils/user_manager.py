@@ -66,6 +66,7 @@ class User:
 
     def to_dict(self) -> dict:
         obj = self.__dict__.copy()
+        obj["reminders"] = [reminder.to_dict() for reminder in obj["reminders"]]
         for key in list(obj.keys()):
             if isinstance(obj[key], datetime):
                 obj[key] = obj[key].isoformat()
