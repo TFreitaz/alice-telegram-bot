@@ -4,6 +4,7 @@ import json
 import pytz
 import string
 import telebot
+import dateutil
 import requests
 import unidecode
 
@@ -153,6 +154,10 @@ def ClearText(text):
     else:
         text = " ".join(text)
     return text
+
+
+def fromisoformat(isodatetime):
+    return dateutil.parser.parse(isodatetime)
 
 
 def get_link(ans):
@@ -384,8 +389,8 @@ def SetReminder(message, **fields):
         answer = f'Prontinho{name_text}! Lembrete "{resp["title"]}" programado para as {hh}:{mm}h de {dd}/{MM}/{aaaa}.'
         reminder_datetime = utc2local(datetime.strptime(f'{resp["date_tz"]} {resp["time_tz"]}', "%Y-%m-%d %H:%M:%S"))
         remind_at = reminder_datetime.isoformat()
-        created_at = utc2local(datetime.fromisoformat(resp["created_at"][:-1]))
-        updated_at = utc2local(datetime.fromisoformat(resp["updated_at"][:-1]))
+        created_at = utc2local(fromisoformat(resp["created_at"][:-1]))
+        updated_at = utc2local(fromisoformat(resp["updated_at"][:-1]))
         remind = Reminder(
             reminder_id=str(resp["id"]), title=resp["title"], remind_at=remind_at, created_at=created_at, updated_at=updated_at
         )
