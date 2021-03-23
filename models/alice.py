@@ -163,6 +163,10 @@ def get_link(ans):
     return links
 
 
+def local2utc(dt):
+    return dt.replace(tzinfo=pytz.timezone("Brazil/East")).astimezone(pytz.timezone("UTC"))
+
+
 def remove_comms(text):
     return " ".join([word for word in text.split() if not word.startswith("/")])
 
@@ -350,7 +354,8 @@ def SetReminder(message, **fields):
         payload["title"] = "Reminder"
 
     if hh and mm:
-        payload["time_tz"] = f"{str(int(hh)+3)}:{mm}"
+        time_tz = local2utc(datetime.strftime(f"{hh}:{mm}", "%H:%M")).strptime("%H:%M")
+        payload["time_tz"] = time_tz
     else:
         payload["time_tz"] = (now + timedelta(hours=4)).strftime("%H:%M")
 
@@ -381,7 +386,9 @@ def SetReminder(message, **fields):
         remind_at = reminder_datetime.isoformat()
         created_at = utc2local(datetime.fromisoformat(resp["created_at"][:-1]))
         updated_at = utc2local(datetime.fromisoformat(resp["updated_at"][:-1]))
-        remind = Reminder(reminder_id=str(resp["id"]), title=resp["title"], remind_at=remind_at, created_at=created_at, updated_at=updated_at)
+        remind = Reminder(
+            reminder_id=str(resp["id"]), title=resp["title"], remind_at=remind_at, created_at=created_at, updated_at=updated_at
+        )
         controller.user.reminders.append(remind)
     else:
         if name:
