@@ -58,7 +58,6 @@ class HerokuDB:
             data = {columns[i]: values[i] for i in range(len(values))}
 
         if persist:
-            zlog(f"SELECT * FROM {table} WHERE {condition}")
             self.cursor.execute(f"SELECT * FROM {table} WHERE {condition}")
             count = len(self.cursor.fetchall())
             if not count:
@@ -68,8 +67,6 @@ class HerokuDB:
         cmd = f"UPDATE {table} SET "
         cmd += ", ".join([f"{key} = '{data[key]}'" for key in data.keys()])
         cmd += f" WHERE {condition}"
-
-        zlog(cmd)
 
         self.cursor.execute(cmd)
         self.conn.commit()
