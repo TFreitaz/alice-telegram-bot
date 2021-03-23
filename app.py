@@ -61,7 +61,8 @@ def alice_webhook():
             bot.send_message(chat_id, "Poxa, sinto muito. Ainda não sei reconhecer áudios.")
 
     except Exception as e:
-        bot.send_message(ADMIN_USER_ID, str(e))
+        error_msg = f"{type(e).__name__}: str(e)"
+        bot.send_message(ADMIN_USER_ID, error_msg)
 
     alice.user_id = None
     return {"status": 200}
