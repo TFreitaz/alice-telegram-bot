@@ -365,7 +365,7 @@ def SetReminder(message, **fields):
         payload["date_tz"] = reminder_date
     else:
         reminder_datetime = now.strftime("%Y-%m-%d") + f' {payload["time_tz"]}'
-        reminder_datetime = datetime.strptime(reminder_datetime, "%Y-%m-%d %H:%M:%S").replace(tzinfo=pytz.timezone("Brazil/East"))
+        reminder_datetime = datetime.strptime(reminder_datetime, "%Y-%m-%d %H:%M").replace(tzinfo=pytz.timezone("Brazil/East"))
         if (reminder_datetime - now).days < 0:
             reminder_datetime = reminder_datetime + timedelta(days=1)
         payload["date_tz"] = reminder_datetime.strftime("%Y-%m-%d")
@@ -382,7 +382,7 @@ def SetReminder(message, **fields):
         if name:
             name_text = f", {name}"
         answer = f'Prontinho{name_text}! Lembrete "{resp["title"]}" programado para as {hh}:{mm}h de {dd}/{MM}/{aaaa}.'
-        reminder_datetime = utc2local(datetime.strptime(f'{resp["date_tz"]} {resp["time_tz"]}', "%Y-%m-%d %H:%M"))
+        reminder_datetime = utc2local(datetime.strptime(f'{resp["date_tz"]} {resp["time_tz"]}', "%Y-%m-%d %H:%M:%S"))
         remind_at = reminder_datetime.isoformat()
         created_at = utc2local(datetime.fromisoformat(resp["created_at"][:-1]))
         updated_at = utc2local(datetime.fromisoformat(resp["updated_at"][:-1]))
