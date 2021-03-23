@@ -164,7 +164,7 @@ def get_link(ans):
 
 
 def local2utc(dt):
-    zlog(df.isoformat())
+    zlog(dt.isoformat())
     return dt.replace(tzinfo=pytz.timezone("Brazil/East")).astimezone(pytz.timezone("UTC"))
 
 
