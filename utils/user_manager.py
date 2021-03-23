@@ -1,5 +1,5 @@
 import os
-
+import json
 import telebot
 
 from typing import List, Union
@@ -84,6 +84,7 @@ class User:
         chats_columns = self.db.get_columns("chats")
         to_add = {col: user_data["chat"][col] for col in user_data.keys() if col in chats_columns}
         to_add["telegram_id"] = self.telegram_id
+        zlog(json.dumps(to_add))
         self.db.update("chats", f"telegram_id = '{self.telegram_id}'", data=to_add)
         zlog("Updated chats")
         reminders_columns = self.db.get_columns("reminders")
