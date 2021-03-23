@@ -10,7 +10,7 @@ import unidecode
 from datetime import datetime, timedelta
 
 from utils.investments import Stocks
-from utils.user_manager import User, Users
+from utils.user_manager import User, Users, Reminder
 from utils.database import HerokuDB
 
 # from utils.image_tools import cartoon_generator
@@ -167,6 +167,10 @@ def remove_comms(text):
     return " ".join([word for word in text.split() if not word.startswith("/")])
 
 
+def utc2local(dt):
+    return dt.replace(tzinfo=pytz.timezone("UTC")).astimezone(pytz.timezone("Brazil/East"))
+
+
 @controller.add_adapter(comms=["help"])
 def Help(message, **fields):
     answers = []
@@ -242,7 +246,7 @@ def SetName(message, **fields):
     description="Programar lembrete",
     user_inputs=['"nome do lembrete"', "data", "horário"],
 )
-def Reminder(message, **fields):
+def SetReminder(message, **fields):
 
     token = os.getenv("REMINDER_API_TOKEN")
     answers = []
@@ -373,7 +377,12 @@ def Reminder(message, **fields):
         if name:
             name_text = f", {name}"
         answer = f'Prontinho{name_text}! Lembrete "{resp["title"]}" programado para as {hh}:{mm}h de {dd}/{MM}/{aaaa}.'
-
+        reminder_datetime = utc2local(datetime.strftime(f'{resp["date_tz"]} {resp["time_tz"]}', "%Y-%m-%d %H:%M"))
+        remind_at = reminder_datetime.isoformat()
+        created_at = utc2local(datetime.fromisoformat(resp["created_at"][:-1]))
+        updated_at = utc2local(datetime.fromisoformat(resp["updated_at"][:-1]))
+        remind = Reminder(reminder_id=str(resp["id"]), title=resp["title"], remind_at=remind_at, created_at=created_at, updated_at=updated_at)
+        controller.user.reminders.append(remind)
     else:
         if name:
             answer = f"{name}, não consegui criar o lembrete. Você pode verificar a mensagem e tentar novamente."
