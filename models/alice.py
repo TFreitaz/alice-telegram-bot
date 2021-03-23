@@ -395,6 +395,7 @@ def SetReminder(message, **fields):
             reminder_id=str(resp["id"]), title=resp["title"], remind_at=remind_at, created_at=created_at, updated_at=updated_at
         )
         controller.user.reminders.append(remind)
+        controller.user.update()
     else:
         if name:
             answer = f"{name}, não consegui criar o lembrete. Você pode verificar a mensagem e tentar novamente."
