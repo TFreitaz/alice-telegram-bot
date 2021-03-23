@@ -91,7 +91,7 @@ class User:
             to_add = {col: reminder[col] for col in reminder.keys() if col in reminders_columns}
             to_add["telegram_id"] = self.telegram_id
             self.db.update(
-                "chats",
+                "reminders",
                 f"telegram_id = '{self.telegram_id}' AND reminder_id = '{reminder['reminder_id']}'",
                 persist=True,
                 data=to_add,
