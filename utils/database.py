@@ -1,8 +1,16 @@
 import os
+import telebot
 import psycopg2
 
 
 HEROKU_DB_URL = os.getenv("HEROKU_DB_URL")
+ADMIN_USER_ID = os.getenv("ADMIN_USER_ID")
+TELEGRAM_TOKEN = os.getenv("TELEGRAM_TOKEN")
+
+
+def zlog(message):
+    bot = telebot.TeleBot(TELEGRAM_TOKEN)
+    bot.send_message(ADMIN_USER_ID, message)
 
 
 def create_cmd(table, columns):
@@ -50,6 +58,7 @@ class HerokuDB:
             data = {columns[i]: values[i] for i in range(len(values))}
 
         if persist:
+            zlog(f"SELECT * FROM {table} WHERE {condition}")
             self.cursor.execute(f"SELECT * FROM {table} WHERE {condition}")
             count = len(self.cursor.fetchall())
             if not count:
@@ -59,6 +68,8 @@ class HerokuDB:
         cmd = f"UPDATE {table} SET "
         cmd += ", ".join([f"{key} = '{data[key]}'" for key in data.keys()])
         cmd += f" WHERE {condition}"
+
+        zlog(cmd)
 
         self.cursor.execute(cmd)
         self.conn.commit()
