@@ -10,9 +10,10 @@ import unidecode
 
 from datetime import datetime, timedelta
 
+from utils.database import HerokuDB
 from utils.investments import Stocks
 from utils.user_manager import User, Users, Reminder
-from utils.database import HerokuDB
+from utils.datetime_tools import local2utc, utc2local
 
 # from utils.image_tools import cartoon_generator
 
@@ -171,19 +172,8 @@ def get_link(ans):
     return links
 
 
-def local2utc(dt):
-    utc_dt = dt.replace(tzinfo=local_tz).astimezone(utc_tz)
-    return utc_tz.normalize(utc_dt - timedelta(minutes=6))
-
-
 def remove_comms(text):
     return " ".join([word for word in text.split() if not word.startswith("/")])
-
-
-def utc2local(dt):
-    local_dt = dt.replace(tzinfo=utc_tz).astimezone(local_tz)
-    # return local_tz.normalize(local_dt + timedelta(minutes=6))
-    return local_dt
 
 
 @controller.add_adapter(comms=["help"])
