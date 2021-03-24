@@ -4,10 +4,11 @@ import requests
 
 from datetime import datetime
 
-from models.alice import controller
-
-from flask import Flask, request
 from flask_restful import Api
+from flask import Flask, request
+
+from models.alice import controller
+from utils.datetime_tools import utc2local
 
 
 ADMIN_USER_ID = os.getenv("ADMIN_USER_ID")
@@ -61,7 +62,8 @@ def alice_webhook():
             bot.send_message(chat_id, "Poxa, sinto muito. Ainda não sei reconhecer áudios.")
 
     except Exception as e:
-        bot.send_message(ADMIN_USER_ID, str(e))
+        error_msg = f"{type(e).__name__}: {str(e)}"
+        bot.send_message(ADMIN_USER_ID, error_msg)
 
     alice.user_id = None
     return {"status": 200}
@@ -71,15 +73,13 @@ def alice_webhook():
 def alice_sender():
     data = request.json
     title = data["reminders_notified"][0]["title"]
-    hh, mm, ss = data["reminders_notified"][0]["time_tz"].split(":")
-    hh = str(int(hh) - 3)
-    if len(hh) == 1:
-        hh = "0" + hh
+    reminder_datetime = utc2local(datetime.strptime(data["reminders_notified"][0]["time_tz"], "%H:%M:%S"))
+    reminder_time = reminder_datetime.strftime("%H:%M")
     chat_id = data["reminders_notified"][0]["notes"]
     msg = "Olá! Passando para te avisar do seu lembrete "
     if title != "Reminder":
         msg += f'"{title}" '
-    msg += f"programado para as {hh}:{mm}:{ss}."
+    msg += f"programado para as {reminder_time}."
     bot.send_message(chat_id, msg)
     return {"status": 200}
 

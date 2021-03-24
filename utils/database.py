@@ -1,8 +1,16 @@
 import os
+import telebot
 import psycopg2
 
 
 HEROKU_DB_URL = os.getenv("HEROKU_DB_URL")
+ADMIN_USER_ID = os.getenv("ADMIN_USER_ID")
+TELEGRAM_TOKEN = os.getenv("TELEGRAM_TOKEN")
+
+
+def zlog(message):
+    bot = telebot.TeleBot(TELEGRAM_TOKEN)
+    bot.send_message(ADMIN_USER_ID, message)
 
 
 def create_cmd(table, columns):
@@ -25,7 +33,15 @@ class HerokuDB:
         self.conn = psycopg2.connect(HEROKU_DB_URL)
         self.cursor = self.conn.cursor()
 
-    def insert(self, table, values, columns=[]):
+    def insert(self, table, **fields):
+        columns = fields.get("columns", [])
+        values = fields.get("values", [])
+        data = fields.get("data", {})
+
+        if data:
+            columns = list(data.keys())
+            values = list(data.values())
+
         cmd = f"INSERT INTO {table}"
         if len(columns) > 0:
             cmd += "(" + ", ".join(columns) + ")"
@@ -33,13 +49,20 @@ class HerokuDB:
         self.cursor.execute(cmd)
         self.conn.commit()
 
-    def update(self, table, condition, **fields):
+    def update(self, table, condition, persist=False, **fields):
         columns = fields.get("columns", [])
         values = fields.get("values", [])
         data = fields.get("data", {})
 
         if columns and values:
             data = {columns[i]: values[i] for i in range(len(values))}
+
+        if persist:
+            self.cursor.execute(f"SELECT * FROM {table} WHERE {condition}")
+            count = len(self.cursor.fetchall())
+            if not count:
+                self.insert(table, data=data)
+                return
 
         cmd = f"UPDATE {table} SET "
         cmd += ", ".join([f"{key} = '{data[key]}'" for key in data.keys()])

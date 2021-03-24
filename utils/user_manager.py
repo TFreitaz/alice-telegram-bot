@@ -18,7 +18,8 @@ def zlog(message):
 
 class Chat:
     def __init__(self, **fields):
-        self.last_query = fields.get("last_query", "")
+        self.last_message = fields.get("last_message", "")
+        self.last_message_at = fields.get("last_message_at", "")
 
     def to_dict(self):
         return self.__dict__
@@ -26,7 +27,7 @@ class Chat:
 
 class Reminder:
     def __init__(self, **fields):
-        self.id = fields.get("id", "")
+        self.reminder_id = fields.get("reminder_id", "")
         self.title = fields.get("title", "")
         self.remind_at = fields.get("remind_at", "")
         self.created_at = fields.get("created_at", "")
@@ -65,6 +66,7 @@ class User:
 
     def to_dict(self) -> dict:
         obj = self.__dict__.copy()
+        obj["reminders"] = [reminder.to_dict() for reminder in obj["reminders"]]
         for key in list(obj.keys()):
             if isinstance(obj[key], datetime):
                 obj[key] = obj[key].isoformat()
@@ -81,8 +83,19 @@ class User:
         to_add = {col: user_data[col] for col in user_data.keys() if col in users_columns}
         self.db.update("users", f"telegram_id = '{self.telegram_id}'", data=to_add)
         chats_columns = self.db.get_columns("chats")
-        to_add = {col: user_data[col] for col in user_data.keys() if col in chats_columns}
+        to_add = {col: user_data["chat"][col] for col in user_data["chat"].keys() if col in chats_columns}
+        to_add["telegram_id"] = self.telegram_id
         self.db.update("chats", f"telegram_id = '{self.telegram_id}'", data=to_add)
+        reminders_columns = self.db.get_columns("reminders")
+        for reminder in user_data["reminders"]:
+            to_add = {col: reminder[col] for col in reminder.keys() if col in reminders_columns}
+            to_add["telegram_id"] = self.telegram_id
+            self.db.update(
+                "reminders",
+                f"telegram_id = '{self.telegram_id}' AND reminder_id = '{reminder['reminder_id']}'",
+                persist=True,
+                data=to_add,
+            )
         self.db.conn.close()
 
 

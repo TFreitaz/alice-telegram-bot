@@ -4,19 +4,24 @@ import json
 import pytz
 import string
 import telebot
+import dateutil
 import requests
 import unidecode
 
 from datetime import datetime, timedelta
 
-from utils.investments import Stocks
-from utils.user_manager import User, Users
 from utils.database import HerokuDB
+from utils.investments import Stocks
+from utils.user_manager import User, Users, Reminder
+from utils.datetime_tools import local2utc, utc2local
 
 # from utils.image_tools import cartoon_generator
 
 TELEGRAM_TOKEN = os.getenv("TELEGRAM_TOKEN")
 ADMIN_USER_ID = int(str(os.getenv("ADMIN_USER_ID")))
+
+utc_tz = pytz.timezone("UTC")
+local_tz = pytz.timezone("Brazil/East")
 
 
 def zlog(message):
@@ -155,6 +160,10 @@ def ClearText(text):
     return text
 
 
+def fromisoformat(isodatetime):
+    return dateutil.parser.parse(isodatetime)
+
+
 def get_link(ans):
     links = []
     for term in ans.split():
@@ -242,7 +251,7 @@ def SetName(message, **fields):
     description="Programar lembrete",
     user_inputs=['"nome do lembrete"', "data", "horário"],
 )
-def Reminder(message, **fields):
+def SetReminder(message, **fields):
 
     token = os.getenv("REMINDER_API_TOKEN")
     answers = []
@@ -346,7 +355,8 @@ def Reminder(message, **fields):
         payload["title"] = "Reminder"
 
     if hh and mm:
-        payload["time_tz"] = f"{str(int(hh)+3)}:{mm}"
+        time_tz = local2utc(datetime.strptime(f"{hh}:{mm}", "%H:%M")).strftime("%H:%M")
+        payload["time_tz"] = time_tz
     else:
         payload["time_tz"] = (now + timedelta(hours=4)).strftime("%H:%M")
 
@@ -365,15 +375,20 @@ def Reminder(message, **fields):
 
     if r.ok:
         resp = r.json()
-        aaaa, MM, dd = resp["date_tz"].split("-")
-        hh, mm, _ = resp["time_tz"].split(":")
-        hh = str(int(hh) - 3)
-        if len(hh) == 1:
-            hh = "0" + hh
+        reminder_datetime = utc2local(datetime.strptime(f'{resp["date_tz"]} {resp["time_tz"]}', "%Y-%m-%d %H:%M:%S"))
+        reminder_timer = reminder_datetime.strftime("%H:%M")
+        reminder_date = reminder_datetime.strftime("%d/%m/%Y")
         if name:
             name_text = f", {name}"
-        answer = f'Prontinho{name_text}! Lembrete "{resp["title"]}" programado para as {hh}:{mm}h de {dd}/{MM}/{aaaa}.'
-
+        answer = f'Prontinho{name_text}! Lembrete "{resp["title"]}" programado para as {reminder_timer}h de {reminder_date}.'
+        remind_at = reminder_datetime.isoformat()
+        created_at = utc2local(fromisoformat(resp["created_at"][:-1]))
+        updated_at = utc2local(fromisoformat(resp["updated_at"][:-1]))
+        remind = Reminder(
+            reminder_id=str(resp["id"]), title=resp["title"], remind_at=remind_at, created_at=created_at, updated_at=updated_at
+        )
+        controller.user.reminders.append(remind)
+        controller.user.update()
     else:
         if name:
             answer = f"{name}, não consegui criar o lembrete. Você pode verificar a mensagem e tentar novamente."
