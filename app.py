@@ -73,7 +73,7 @@ def alice_webhook():
 def alice_sender():
     data = request.json
     title = data["reminders_notified"][0]["title"]
-    reminder_datetime = utc2local(datetime.strptime(data["reminders_notified"][0]["time_tz"], "%H:%M:%S"))
+    reminder_datetime = utc2local(datetime.strptime(data["reminders_notified"][0]["time_tz"], "%H:%M:%S"), normalize=True)
     reminder_time = reminder_datetime.strftime("%H:%M")
     chat_id = data["reminders_notified"][0]["notes"]
     msg = "Olá! Passando para te avisar do seu lembrete "
