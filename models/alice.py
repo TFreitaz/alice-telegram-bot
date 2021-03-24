@@ -355,7 +355,6 @@ def SetReminder(message, **fields):
         payload["title"] = "Reminder"
 
     if hh and mm:
-        zlog(f"{hh}:{mm}")
         time_tz = local2utc(datetime.strptime(f"{hh}:{mm}", "%H:%M")).strftime("%H:%M")
         payload["time_tz"] = time_tz
     else:
