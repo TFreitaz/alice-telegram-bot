@@ -11,7 +11,8 @@ def local2utc(dt: datetime):
     return utc_tz.normalize(utc_dt - timedelta(minutes=6))
 
 
-def utc2local(dt: datetime):
+def utc2local(dt: datetime, normalize=False):
     local_dt = dt.replace(tzinfo=utc_tz).astimezone(local_tz)
-    # return local_tz.normalize(local_dt + timedelta(minutes=6))
+    if normalize:
+        return local_tz.normalize(local_dt + timedelta(minutes=6))
     return local_dt
