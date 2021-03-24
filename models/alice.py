@@ -533,7 +533,7 @@ def SecredLinkGenerate(message, **fields):
                 log = "Não encontrei nenhum link salvo."
         else:
             if controller.user.nickname:
-                name_text = f"{controller.user.nickname}, "
+                name_text = f", {controller.user.nickname}"
             answer1 = f"Aqui está{name_text}!\n"
             answer1 += "\n\n".join(link[0] for link in links)
             answers.append(("msg", answer1))
