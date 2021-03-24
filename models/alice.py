@@ -182,7 +182,8 @@ def remove_comms(text):
 
 def utc2local(dt):
     local_dt = dt.replace(tzinfo=utc_tz).astimezone(local_tz)
-    return local_tz.normalize(local_dt + timedelta(minutes=6))
+    # return local_tz.normalize(local_dt + timedelta(minutes=6))
+    return local_dt
 
 
 @controller.add_adapter(comms=["help"])
