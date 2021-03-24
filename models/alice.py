@@ -19,6 +19,9 @@ from utils.database import HerokuDB
 TELEGRAM_TOKEN = os.getenv("TELEGRAM_TOKEN")
 ADMIN_USER_ID = int(str(os.getenv("ADMIN_USER_ID")))
 
+utc_tz = pytz.timezone("UTC")
+local_tz = pytz.timezone("Brazil/East")
+
 
 def zlog(message):
     bot = telebot.TeleBot(TELEGRAM_TOKEN)
@@ -169,7 +172,8 @@ def get_link(ans):
 
 
 def local2utc(dt):
-    return dt.replace(tzinfo=pytz.timezone("Brazil/East")).astimezone(pytz.timezone("UTC"))
+    utc_dt = dt.replace(tzinfo=local_tz).astimezone(utc_tz)
+    return utc_tz.normalize(utc_dt - timedelta(minutes=6))
 
 
 def remove_comms(text):
@@ -177,7 +181,8 @@ def remove_comms(text):
 
 
 def utc2local(dt):
-    return dt.replace(tzinfo=pytz.timezone("UTC")).astimezone(pytz.timezone("Brazil/East"))
+    local_dt = dt.replace(tzinfo=utc_tz).astimezone(local_tz)
+    return local_tz.normalize(local_dt + timedelta(minutes=6))
 
 
 @controller.add_adapter(comms=["help"])
