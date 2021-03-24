@@ -561,7 +561,7 @@ def SecredLinkAdd(message, **fields):
     if len(links) > 0:
         for link in links:
             source = re.search(r"\w*\.(com|net)", link).group().split(".")[0]
-            db.insert("links", [controller.user_id, source, link], ["user_id", "source", "link"])
+            db.insert("links", values=[controller.user_id, source, link], columns=["user_id", "source", "link"])
         db.conn.commit()
         answer1 = f"Prontinho{name_text}!"
     else:
