@@ -384,15 +384,12 @@ def SetReminder(message, **fields):
 
     if r.ok:
         resp = r.json()
-        aaaa, MM, dd = resp["date_tz"].split("-")
-        hh, mm, _ = resp["time_tz"].split(":")
-        hh = str(int(hh) - 3)
-        if len(hh) == 1:
-            hh = "0" + hh
+        reminder_datetime = utc2local(datetime.strptime(f'{resp["date_tz"]} {resp["time_tz"]}', "%Y-%m-%d %H:%M:%S"))
+        reminder_timer = reminder_datetime.strftime("%H:%M")
+        reminder_date = reminder_datetime.strftime("%d/%m/%Y")
         if name:
             name_text = f", {name}"
-        answer = f'Prontinho{name_text}! Lembrete "{resp["title"]}" programado para as {hh}:{mm}h de {dd}/{MM}/{aaaa}.'
-        reminder_datetime = utc2local(datetime.strptime(f'{resp["date_tz"]} {resp["time_tz"]}', "%Y-%m-%d %H:%M:%S"))
+        answer = f'Prontinho{name_text}! Lembrete "{resp["title"]}" programado para as {reminder_timer}h de {reminder_date}.'
         remind_at = reminder_datetime.isoformat()
         created_at = utc2local(fromisoformat(resp["created_at"][:-1]))
         updated_at = utc2local(fromisoformat(resp["updated_at"][:-1]))
