@@ -250,6 +250,8 @@ def ShowReminders(message, **fields):
     if controller.user.nickname:
         answer = f"{controller.user.nickname}, estes são os seus lembretes:\n\n"
 
+    zlog("\n".join(reminder.remind_at for reminder in controller.user.reminders))
+
     answer += "\n".join(
         f"{fromisoformat(reminder.remind_at).strftime('%d/%m/%Y às %H:%M')} - {reminder.title}"
         for reminder in controller.user.reminders
