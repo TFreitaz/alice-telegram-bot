@@ -74,13 +74,14 @@ def alice_webhook():
 def alice_sender():
     db = HerokuDB()
     data = request.json
-    db.cursor.execute("SELECT telegram_id FROM reminders WHERE reminder_id = '325'")
+    reminder_id = data["reminders_notified"][0]["id"]
+    db.cursor.execute(f"SELECT telegram_id FROM reminders WHERE reminder_id = '{reminder_id}'")
     r = db.cursor.fetchall()
     telegram_id = r[0][0]
     title = data["reminders_notified"][0]["title"]
     reminder_datetime = utc2local(datetime.strptime(data["reminders_notified"][0]["time_tz"], "%H:%M:%S"), normalize=True)
     reminder_time = reminder_datetime.strftime("%H:%M")
-    if data["reminders_notified"][0]["notes"] == 'reminder':
+    if data["reminders_notified"][0]["notes"] == "reminder":
         msg = "Olá! Passando para te avisar do seu lembrete "
         if title != "Reminder":
             msg += f'"{title}" '
