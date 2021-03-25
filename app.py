@@ -87,6 +87,8 @@ def alice_sender():
             msg += f'"{title}" '
         msg += f"programado para as {reminder_time}."
         bot.send_message(telegram_id, msg)
+        db.cursor.execute(f"DELETE FROM reminders WHERE reminder_id = '{reminder_id}'")
+        db.conn.commit()
         return {"status": 200}
 
 
