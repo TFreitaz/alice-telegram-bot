@@ -4,7 +4,6 @@ import json
 import pytz
 import string
 import telebot
-import dateutil
 import requests
 import unidecode
 
