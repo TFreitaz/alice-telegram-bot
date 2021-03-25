@@ -262,7 +262,7 @@ def SetReminder(message, **fields):
     url = "https://reminders-api.com/api/applications/48/reminders"
 
     header = {"Authorization": f"Bearer {token}"}
-    payload = {"timezone": "UTC", "notes": str(controller.user_id)}
+    payload = {"timezone": "UTC", "notes": "reminder"}
 
     now = datetime.now(pytz.timezone("Brazil/East"))
 
