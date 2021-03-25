@@ -48,7 +48,7 @@ class User:
 
     def get_reminders(self):
         self.db = HerokuDB()
-        self.db.cursor.execute(f"SELECT * FROM reminders WHERE telegram_id = '{self.telegram_id}'")
+        self.db.cursor.execute(f"SELECT * FROM reminders WHERE telegram_id = '{self.telegram_id}' ORDER BY remind_at")
         reminders = self.db.fetchall()
         columns = self.db.get_columns("reminders")
         data = [{columns[i][0]: reminder[i] for i in range(len(reminder))} for reminder in reminders]

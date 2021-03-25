@@ -6,25 +6,6 @@
         "brigado",
         "vlw"
     ],
-    "alarm": [
-        "alarm",
-        "alarme",
-        "remind",
-        "reminder",
-        "lembre",
-        "lembrete",
-        "lembra",
-        "avisa",
-        "avise",
-        "diga",
-        "alerta",
-        "alerte",
-        "chame",
-        "chama",
-        "lembrar",
-        "avisar",
-        "chamar"
-    ],
     "amanhã": [
         "amanha",
         "tomorrow"
@@ -241,21 +222,11 @@
         "saber",
         "exibir",
         "mostrar",
-        "classe",
-        "classifico",
-        "classificacao",
-        "classificado",
-        "classifica",
-        "classificar",
-        "qualifica",
-        "preco",
-        "custo",
-        "lucro",
-        "cotacao",
-        "vender",
-        "vende",
-        "vendo",
-        "venda"
+        "mostre",
+        "show",
+        "fale",
+        "liste",
+        "quais"
     ],
     "movie": [
         "filme",
@@ -341,6 +312,35 @@
         "melhores",
         "mais",
         "best"
+    ],
+    "reminder": [
+        "alarm",
+        "alarme",
+        "remind",
+        "reminder",
+        "lembre",
+        "lembrete",
+        "lembra",
+        "avisa",
+        "avise",
+        "diga",
+        "alerta",
+        "alerte",
+        "chame",
+        "chama",
+        "lembrar",
+        "avisar",
+        "chamar"
+    ],
+    "reminders": [
+        "alarms",
+        "alarmes",
+        "reminds",
+        "reminders",
+        "lembretes",
+        "avisos",
+        "alertas",
+        "chamados",
     ],
     "sair": [
         "sair"
