@@ -4,7 +4,6 @@ import json
 import pytz
 import string
 import telebot
-import dateutil
 import requests
 import unidecode
 
@@ -13,7 +12,7 @@ from datetime import datetime, timedelta
 from utils.database import HerokuDB
 from utils.investments import Stocks
 from utils.user_manager import User, Users, Reminder
-from utils.datetime_tools import local2utc, utc2local
+from utils.datetime_tools import fromisoformat, local2utc, utc2local
 
 # from utils.image_tools import cartoon_generator
 
@@ -160,10 +159,6 @@ def ClearText(text):
     return text
 
 
-def fromisoformat(isodatetime):
-    return dateutil.parser.parse(isodatetime)
-
-
 def get_link(ans):
     links = []
     for term in ans.split():
@@ -245,8 +240,28 @@ def SetName(message, **fields):
     return answers
 
 
+@controller.add_adapter(comms=["mostrar_lembretes"], reqs=["reminders"], description="Mostrar seus lembretes.")
+def ShowReminders(message, **fields):
+    answers = []
+
+    controller.user.get_reminders()
+
+    answer = "Estes são os seus lembretes:\n\n"
+    if controller.user.nickname:
+        answer = f"{controller.user.nickname}, estes são os seus lembretes:\n\n"
+
+    answer += "\n".join(
+        f"{fromisoformat(reminder.remind_at).strftime('%d/%m/%Y às %H:%M')} - {reminder.title}"
+        for reminder in controller.user.reminders
+    )
+
+    answers.append(("msg", answer))
+
+    return answers
+
+
 @controller.add_adapter(
-    reqs=["alarm"],
+    reqs=["reminder"],
     comms=["lembrete"],
     description="Programar lembrete",
     user_inputs=['"nome do lembrete"', "data", "horário"],
@@ -262,7 +277,7 @@ def SetReminder(message, **fields):
     url = "https://reminders-api.com/api/applications/48/reminders"
 
     header = {"Authorization": f"Bearer {token}"}
-    payload = {"timezone": "UTC", "notes": str(controller.user_id)}
+    payload = {"timezone": "UTC", "notes": "reminder"}
 
     now = datetime.now(pytz.timezone("Brazil/East"))
 

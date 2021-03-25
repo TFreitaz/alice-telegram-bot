@@ -1,9 +1,14 @@
 import pytz
+import dateutil
 
 from datetime import datetime, timedelta
 
 utc_tz = pytz.timezone("UTC")
 local_tz = pytz.timezone("Brazil/East")
+
+
+def fromisoformat(isodatetime):
+    return dateutil.parser.parse(isodatetime)
 
 
 def local2utc(dt: datetime):

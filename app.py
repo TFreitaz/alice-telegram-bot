@@ -9,6 +9,7 @@ from flask import Flask, request
 
 from models.alice import controller
 from utils.datetime_tools import utc2local
+from utils.database import HerokuDB
 
 
 ADMIN_USER_ID = os.getenv("ADMIN_USER_ID")
@@ -71,17 +72,24 @@ def alice_webhook():
 
 @app.route("/alice-sender", methods=["POST"])
 def alice_sender():
+    db = HerokuDB()
     data = request.json
+    reminder_id = data["reminders_notified"][0]["id"]
+    db.cursor.execute(f"SELECT telegram_id FROM reminders WHERE reminder_id = '{reminder_id}'")
+    r = db.cursor.fetchall()
+    telegram_id = r[0][0]
     title = data["reminders_notified"][0]["title"]
     reminder_datetime = utc2local(datetime.strptime(data["reminders_notified"][0]["time_tz"], "%H:%M:%S"), normalize=True)
     reminder_time = reminder_datetime.strftime("%H:%M")
-    chat_id = data["reminders_notified"][0]["notes"]
-    msg = "Olá! Passando para te avisar do seu lembrete "
-    if title != "Reminder":
-        msg += f'"{title}" '
-    msg += f"programado para as {reminder_time}."
-    bot.send_message(chat_id, msg)
-    return {"status": 200}
+    if data["reminders_notified"][0]["notes"] == "reminder":
+        msg = "Olá! Passando para te avisar do seu lembrete "
+        if title != "Reminder":
+            msg += f'"{title}" '
+        msg += f"programado para as {reminder_time}."
+        bot.send_message(telegram_id, msg)
+        db.cursor.execute(f"DELETE FROM reminders WHERE reminder_id = '{reminder_id}'")
+        db.conn.commit()
+        return {"status": 200}
 
 
 @app.after_request
