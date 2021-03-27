@@ -71,6 +71,8 @@ class Controller:
     def classific(self, message):
         self.classification = []
         self.commands = []
+        if len(message.split('"')) == 3:
+            message = message.split('"')[0] + message.split('"')[2]
         for word in self.classes.keys():
             if any(x in self.classes[word] for x in ClearText(message).split()):
                 self.classification.append(word)
