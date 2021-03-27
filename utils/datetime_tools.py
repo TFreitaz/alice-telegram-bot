@@ -6,7 +6,7 @@ from datetime import datetime, timedelta
 utc_tz = pytz.timezone("UTC")
 local_tz = pytz.timezone("Brazil/East")
 
-weekdays = ["domingo", "segunda", "terça", "quarta", "quinta", "sexta", "sábado"]
+weekdays = ["segunda", "terça", "quarta", "quinta", "sexta", "sábado", "domingo"]
 
 
 def fromisoformat(isodatetime):
