@@ -12,7 +12,7 @@ from datetime import datetime, timedelta
 from utils.database import HerokuDB
 from utils.investments import Stocks
 from utils.user_manager import User, Users, Reminder
-from utils.datetime_tools import fromisoformat, local2utc, utc2local
+from utils.datetime_tools import fromisoformat, local2utc, next_weekday, utc2local, weekdays
 
 # from utils.image_tools import cartoon_generator
 
@@ -246,14 +246,21 @@ def ShowReminders(message, **fields):
 
     controller.user.get_reminders()
 
-    answer = "Estes são os seus lembretes:\n\n"
-    if controller.user.nickname:
-        answer = f"{controller.user.nickname}, estes são os seus lembretes:\n\n"
+    if controller.user.reminders:
 
-    answer += "\n".join(
-        f"{fromisoformat(reminder.remind_at).strftime('%d/%m/%Y às %H:%M')} - {reminder.title}"
-        for reminder in controller.user.reminders
-    )
+        answer = "Estes são os seus lembretes:\n\n"
+        if controller.user.nickname:
+            answer = f"{controller.user.nickname}, estes são os seus lembretes:\n\n"
+
+        answer += "\n".join(
+            f"{fromisoformat(reminder.remind_at).strftime('%d/%m/%Y às %H:%M')} - {reminder.title}"
+            for reminder in controller.user.reminders
+        )
+
+    else:
+        answer = "Você não tem lembretes marcados."
+        if controller.user.nickname:
+            answer = f"{controller.user.nickname}, você não tem lembretes marcados."
 
     answers.append(("msg", answer))
 
@@ -343,6 +350,14 @@ def SetReminder(message, **fields):
                 reminder_date = (now + timedelta(days=1)).strftime("%Y-%m-%d")
         elif controller.match(reqs=["hoje"]):
             reminder_date = now.strftime("%Y-%m-%d")
+        else:
+            for weekday in weekdays:
+                if controller.match(reqs=[weekday]):
+                    reminder_date = next_weekday(now, weekday).strftime("%Y-%m-%d")
+                    break
+            else:
+                if controller.match(reqs=["fim", "semana"]):
+                    reminder_date = next_weekday(now, "sábado").strftime("%Y-%m-%d")
 
     if not (hh and mm):
         if controller.match(reqs=["manhã"]):

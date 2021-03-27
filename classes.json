@@ -105,6 +105,11 @@
         "sarscov2",
         "cov"
     ],
+    "domingo": [
+        "domingo",
+        "sunday",
+        "domingao"
+    ],
     "download": [
         "download",
         "baixar",
@@ -145,6 +150,11 @@
         "movies",
         "cinema",
         "cinemas"
+    ],
+    "fim": [
+        "final",
+        "fim",
+        "end"
     ],
     "fireman": [
         "bombeiro",
@@ -286,6 +296,9 @@
         "novo",
         "menor"
     ],
+    "quarta": [
+        "quarta"
+    ],
     "quest": [
         "qual",
         "quais",
@@ -303,6 +316,9 @@
         "quantos",
         "algum",
         "alguns"
+    ],
+    "quinta": [
+        "quinta"
     ],
     "rank": [
         "rank",
@@ -342,8 +358,21 @@
         "alertas",
         "chamados"
     ],
+    "sábado": [
+        "sabado"
+    ],
     "sair": [
         "sair"
+    ],
+    "segunda": [
+        "segunda"
+    ],
+    "semana": [
+        "semana",
+        "week"
+    ],
+    "sexta": [
+        "sexta"
     ],
     "shopping": [
         "shopping",
@@ -374,6 +403,9 @@
         "tardezinha",
         "detarde",
         "detardezinha"
+    ],
+    "terça": [
+        "terca"
     ],
     "teste": [
         "test",
