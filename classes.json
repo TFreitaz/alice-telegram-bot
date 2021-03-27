@@ -6,6 +6,10 @@
         "brigado",
         "vlw"
     ],
+    "almoço": [
+        "almoço",
+        "lunch"
+    ],
     "amanhã": [
         "amanha",
         "tomorrow"
@@ -33,6 +37,10 @@
         "quebrei",
         "pulso",
         "pulsação"
+    ],
+    "antes": [
+        "antes",
+        "before"
     ],
     "audio": [
         "audio",
@@ -104,6 +112,12 @@
         "coronavirus",
         "sarscov2",
         "cov"
+    ],
+    "depois": [
+        "depois",
+        "apos",
+        "after",
+        "pos"
     ],
     "domingo": [
         "domingo",

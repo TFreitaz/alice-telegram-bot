@@ -360,23 +360,23 @@ def SetReminder(message, **fields):
                     reminder_date = next_weekday(now, "sábado").strftime("%Y-%m-%d")
 
     if not (hh and mm):
+        mm = "00"
         if controller.match(reqs=["manhã"]):
             hh = "09"
-            mm = "00"
         elif controller.match(reqs=["tarde"]):
             hh = "15"
-            mm = "00"
         elif controller.match(reqs=["noite"]):
             hh = "20"
-            mm = "00"
         elif controller.match(reqs=["madrugada"]):
             hh = "02"
-            mm = "00"
+        elif controller.match(reqs=["antes", "almoço"]):
+            hh = "11"
+        elif controller.match(reqs=["depois", "almoço"]):
+            hh = "13:00"
         elif re.search(r"\d*", message):
             hh = re.search(r"\d*", message).group()
             if len(hh) == 1:
                 hh = "0" + hh
-            mm = "00"
 
     temp = message.split('"')
     if len(temp) >= 3:
