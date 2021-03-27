@@ -361,10 +361,10 @@ def SetReminder(message, **fields):
 
     if not (hh and mm):
         if controller.match(reqs=["manhã"]):
-            hh = "08"
+            hh = "09"
             mm = "00"
         elif controller.match(reqs=["tarde"]):
-            hh = "16"
+            hh = "15"
             mm = "00"
         elif controller.match(reqs=["noite"]):
             hh = "20"
