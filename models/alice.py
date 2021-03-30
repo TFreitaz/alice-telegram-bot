@@ -393,15 +393,16 @@ def SetReminder(message, **fields):
         payload["time_tz"] = (now + timedelta(hours=4)).strftime("%H:%M")
 
     if dd and MM and aaaa:
-        payload["date_tz"] = f"{aaaa}-{MM}-{dd}"
+        reminder_datetime = f'{aaaa}-{MM}-{dd} {payload["time_tz"]}'
     elif reminder_date:
-        payload["date_tz"] = reminder_date
+        reminder_datetime = f'{reminder_date} {payload["time_tz"]}'
     else:
         reminder_datetime = now.strftime("%Y-%m-%d") + f' {payload["time_tz"]}'
-        reminder_datetime = datetime.strptime(reminder_datetime, "%Y-%m-%d %H:%M").replace(tzinfo=pytz.timezone("Brazil/East"))
-        if (reminder_datetime - now).days < 0:
-            reminder_datetime = reminder_datetime + timedelta(days=1)
-        payload["date_tz"] = reminder_datetime.strftime("%Y-%m-%d")
+
+    reminder_datetime = datetime.strptime(reminder_datetime, "%Y-%m-%d %H:%M").replace(tzinfo=pytz.timezone("Brazil/East"))
+    if (reminder_datetime - now).days < 0:
+        reminder_datetime = reminder_datetime + timedelta(days=1)
+    payload["date_tz"] = reminder_datetime.strftime("%Y-%m-%d")
 
     r = requests.post(url, json=payload, headers=header)
 
