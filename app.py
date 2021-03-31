@@ -23,6 +23,11 @@ bot = telebot.TeleBot(tkn)
 alice = controller
 
 
+def zlog(message):
+    bot = telebot.TeleBot(tkn)
+    bot.send_message(ADMIN_USER_ID, message)
+
+
 @app.route("/alice-webhook", methods=["POST"])
 def alice_webhook():
     data = request.json
@@ -76,8 +81,11 @@ def alice_sender():
     data = request.json
     reminder_date = data["reminders_notified"][0]["date_tz"]
     reminder_time = data["reminders_notified"][0]["time_tz"]
-    reminder_datetime = utc2local(datetime.strptime(f'{reminder_date} {reminder_time}', "%Y-%m-%d %H:%M:%S"))
-    db.cursor.execute(f"SELECT telegram_id, title, reminder_id FROM reminders WHERE remind_at = '{reminder_datetime.isoformat()}'  ORDER BY telegram_id, reminder_id")
+    reminder_datetime = utc2local(datetime.strptime(f"{reminder_date} {reminder_time}", "%Y-%m-%d %H:%M:%S"))
+    zlog(reminder_datetime.isoformat())
+    db.cursor.execute(
+        f"SELECT telegram_id, title, reminder_id FROM reminders WHERE remind_at = '{reminder_datetime.isoformat()}'  ORDER BY telegram_id, reminder_id"
+    )
     reminders = db.cursor.fetchall()
     telegram_id = reminders[0][0]
     user_reminders = []
@@ -93,8 +101,11 @@ def alice_sender():
                 msg = "Olá! Passando para te avisar do seu lembrete "
                 if user_reminders != "Reminder":
                     msg += f'"{user_reminder}" '
-                msg += 'programado para agora.'
+                msg += "programado para agora."
             bot.send_message(telegram_id, msg)
+
+            telegram_id = reminder[1]
+            user_reminders = [telegram_id]
     db.cursor.execute(f"DELETE FROM reminders WHERE remind_at = '{reminder_datetime.isoformat()}'")
     db.conn.commit()
     # if len(reminders) > 1:
