@@ -76,48 +76,33 @@ def alice_sender():
     data = request.json
     reminder_date = data["reminders_notified"][0]["date_tz"]
     reminder_time = data["reminders_notified"][0]["time_tz"]
-    reminder_datetime = utc2local(datetime.strptime(f'{reminder_date} {reminder_time}', "%Y-%m-%d %H:%M:%S"))
-    db.cursor.execute(f"SELECT telegram_id, title, reminder_id FROM reminders WHERE remind_at = '{reminder_datetime.isoformat()}'  ORDER BY telegram_id, reminder_id")
+    reminder_datetime = utc2local(datetime.strptime(f"{reminder_date} {reminder_time}", "%Y-%m-%d %H:%M:%S"))
+    db.cursor.execute(
+        f"SELECT telegram_id, title, reminder_id FROM reminders WHERE remind_at = '{reminder_datetime.isoformat()}'  ORDER BY telegram_id, reminder_id"
+    )
     reminders = db.cursor.fetchall()
-    if len(reminders) and len(reminders[0]):
-        telegram_id = reminders[0][0]
-        user_reminders = []
-        for reminder in reminders:
-            if reminder[0] == telegram_id:
-                user_reminders.append(reminder[1])
+    telegram_id = reminders[0][0]
+    user_reminders = []
+    for reminder in reminders:
+        if reminder[0] == telegram_id:
+            user_reminders.append(reminder[1])
+        if reminder[0] != telegram_id or reminder[2] == reminders[-1][2]:
+            if len(user_reminders) > 1:
+                msg = "Você tem alguns lembretes para agora:\n"
+                for user_reminder in user_reminders:
+                    msg += f"\n - {user_reminder}"
             else:
-                if len(user_reminders) > 1:
-                    msg = "Você tem alguns lembretes para agora:\n"
-                    for user_reminder in user_reminders:
-                        msg += f"\n - {user_reminder}"
-                else:
-                    msg = "Olá! Passando para te avisar do seu lembrete "
-                    if user_reminders != "Reminder":
-                        msg += f'"{user_reminder}" '
-                    msg += 'programado para agora.'
-                bot.send_message(telegram_id, msg)
-        db.cursor.execute(f"DELETE FROM reminders WHERE remind_at = '{reminder_datetime.isoformat()}'")
-        db.conn.commit()
-    # if len(reminders) > 1:
-    #     msg = "Você tem alguns lembretes para agora:\n"
-    #     for reminder in reminders:
-    #         msg += f"\n - {reminder[1]}"
-    # else:
-    #     msg = "Olá! Passando para te avisar do seu lembrete "
-    #     title = data["reminders_notified"][0]["title"]
+                msg = "Olá! Passando para te avisar do seu lembrete "
+                if user_reminders != "Reminder":
+                    msg += f'"{user_reminders[0]}" '
+                msg += "programado para agora."
+            bot.send_message(telegram_id, msg)
 
-    # reminder_id = data["reminders_notified"][0]["id"]
-    # db.cursor.execute(f"SELECT telegram_id FROM reminders WHERE reminder_id = '{reminder_id}'")
-    # r = db.cursor.fetchall()
-    # telegram_id = r[0][0]
-    # title = data["reminders_notified"][0]["title"]
-    # reminder_time = reminder_datetime.strftime("%H:%M")
-    # if data["reminders_notified"][0]["notes"] == "reminder":
-    #     msg = "Olá! Passando para te avisar do seu lembrete "
-    #     if title != "Reminder":
-    #         msg += f'"{title}" '
-    #     msg += f"programado para as {reminder_time}."
-    #     bot.send_message(telegram_id, msg)
+            telegram_id = reminder[1]
+            user_reminders = [telegram_id]
+
+    db.cursor.execute(f"DELETE FROM reminders WHERE remind_at = '{reminder_datetime.isoformat()}'")
+    db.conn.commit()
     return {"status": 200}
 
 
