@@ -89,7 +89,6 @@ def alice_sender():
     telegram_id = reminders[0][0]
     user_reminders = []
     for reminder in reminders:
-        zlog(f"{reminder[2]} {reminders[-1][2]}")
         if reminder[0] == telegram_id:
             user_reminders.append(reminder[1])
         if reminder[0] != telegram_id or reminder[2] == reminders[-1][2]:
@@ -100,7 +99,7 @@ def alice_sender():
             else:
                 msg = "Olá! Passando para te avisar do seu lembrete "
                 if user_reminders != "Reminder":
-                    msg += f'"{user_reminder}" '
+                    msg += f'"{user_reminders[0]}" '
                 msg += "programado para agora."
             bot.send_message(telegram_id, msg)
 
