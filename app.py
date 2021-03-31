@@ -79,24 +79,25 @@ def alice_sender():
     reminder_datetime = utc2local(datetime.strptime(f'{reminder_date} {reminder_time}', "%Y-%m-%d %H:%M:%S"))
     db.cursor.execute(f"SELECT telegram_id, title, reminder_id FROM reminders WHERE remind_at = '{reminder_datetime.isoformat()}'  ORDER BY telegram_id, reminder_id")
     reminders = db.cursor.fetchall()
-    telegram_id = reminders[0][0]
-    user_reminders = []
-    for reminder in reminders:
-        if reminder[0] == telegram_id:
-            user_reminders.append(reminder[1])
-        else:
-            if len(user_reminders) > 1:
-                msg = "Você tem alguns lembretes para agora:\n"
-                for user_reminder in user_reminders:
-                    msg += f"\n - {user_reminder}"
+    if len(reminders) and len(reminders[0]):
+        telegram_id = reminders[0][0]
+        user_reminders = []
+        for reminder in reminders:
+            if reminder[0] == telegram_id:
+                user_reminders.append(reminder[1])
             else:
-                msg = "Olá! Passando para te avisar do seu lembrete "
-                if user_reminders != "Reminder":
-                    msg += f'"{user_reminder}" '
-                msg += 'programado para agora.'
-            bot.send_message(telegram_id, msg)
-    db.cursor.execute(f"DELETE FROM reminders WHERE remind_at = '{reminder_datetime.isoformat()}'")
-    db.conn.commit()
+                if len(user_reminders) > 1:
+                    msg = "Você tem alguns lembretes para agora:\n"
+                    for user_reminder in user_reminders:
+                        msg += f"\n - {user_reminder}"
+                else:
+                    msg = "Olá! Passando para te avisar do seu lembrete "
+                    if user_reminders != "Reminder":
+                        msg += f'"{user_reminder}" '
+                    msg += 'programado para agora.'
+                bot.send_message(telegram_id, msg)
+        db.cursor.execute(f"DELETE FROM reminders WHERE remind_at = '{reminder_datetime.isoformat()}'")
+        db.conn.commit()
     # if len(reminders) > 1:
     #     msg = "Você tem alguns lembretes para agora:\n"
     #     for reminder in reminders:
