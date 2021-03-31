@@ -108,26 +108,6 @@ def alice_sender():
 
     db.cursor.execute(f"DELETE FROM reminders WHERE remind_at = '{reminder_datetime.isoformat()}'")
     db.conn.commit()
-    # if len(reminders) > 1:
-    #     msg = "Você tem alguns lembretes para agora:\n"
-    #     for reminder in reminders:
-    #         msg += f"\n - {reminder[1]}"
-    # else:
-    #     msg = "Olá! Passando para te avisar do seu lembrete "
-    #     title = data["reminders_notified"][0]["title"]
-
-    # reminder_id = data["reminders_notified"][0]["id"]
-    # db.cursor.execute(f"SELECT telegram_id FROM reminders WHERE reminder_id = '{reminder_id}'")
-    # r = db.cursor.fetchall()
-    # telegram_id = r[0][0]
-    # title = data["reminders_notified"][0]["title"]
-    # reminder_time = reminder_datetime.strftime("%H:%M")
-    # if data["reminders_notified"][0]["notes"] == "reminder":
-    #     msg = "Olá! Passando para te avisar do seu lembrete "
-    #     if title != "Reminder":
-    #         msg += f'"{title}" '
-    #     msg += f"programado para as {reminder_time}."
-    #     bot.send_message(telegram_id, msg)
     return {"status": 200}
 
 
