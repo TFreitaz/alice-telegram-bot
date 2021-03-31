@@ -82,7 +82,6 @@ def alice_sender():
     reminder_date = data["reminders_notified"][0]["date_tz"]
     reminder_time = data["reminders_notified"][0]["time_tz"]
     reminder_datetime = utc2local(datetime.strptime(f"{reminder_date} {reminder_time}", "%Y-%m-%d %H:%M:%S"))
-    zlog(reminder_datetime.isoformat())
     db.cursor.execute(
         f"SELECT telegram_id, title, reminder_id FROM reminders WHERE remind_at = '{reminder_datetime.isoformat()}'  ORDER BY telegram_id, reminder_id"
     )
@@ -92,7 +91,7 @@ def alice_sender():
     for reminder in reminders:
         if reminder[0] == telegram_id:
             user_reminders.append(reminder[1])
-        else:
+        if reminder[0] != telegram_id or reminder[2] == reminders[-1][2]:
             if len(user_reminders) > 1:
                 msg = "Você tem alguns lembretes para agora:\n"
                 for user_reminder in user_reminders:
@@ -106,6 +105,7 @@ def alice_sender():
 
             telegram_id = reminder[1]
             user_reminders = [telegram_id]
+
     db.cursor.execute(f"DELETE FROM reminders WHERE remind_at = '{reminder_datetime.isoformat()}'")
     db.conn.commit()
     # if len(reminders) > 1:
