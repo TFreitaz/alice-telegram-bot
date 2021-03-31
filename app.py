@@ -89,6 +89,7 @@ def alice_sender():
     telegram_id = reminders[0][0]
     user_reminders = []
     for reminder in reminders:
+        zlog(f"{reminder[2]} {reminders[-1][2]}")
         if reminder[0] == telegram_id:
             user_reminders.append(reminder[1])
         if reminder[0] != telegram_id or reminder[2] == reminders[-1][2]:
