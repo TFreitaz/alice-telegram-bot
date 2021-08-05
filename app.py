@@ -23,6 +23,11 @@ bot = telebot.TeleBot(tkn)
 alice = controller
 
 
+def zlog(message):
+    bot = telebot.TeleBot(tkn)
+    bot.send_message(ADMIN_USER_ID, message)
+
+
 @app.route("/alice-webhook", methods=["POST"])
 def alice_webhook():
     data = request.json
