@@ -13,7 +13,7 @@ from utils.user_manager import Reminder
 from utils.datetime_tools import fromisoformat, local2utc, next_weekday, utc2local, weekdays
 
 from chatbot.controller import Controller
-from chatbot.utils import remove_comms, clear_text, get_link
+from chatbot.utils import remove_comms, clear_text, get_link, flip_coin
 
 # from utils.image_tools import cartoon_generator
 
@@ -74,7 +74,7 @@ def Start(message, **fields):
 def Cancelar(message, **fields):
     answer = []
     name_text = ""
-    if controller.user.nickname:
+    if controller.user.nickname and flip_coin(0.7):
         name_text = ", " + controller.user.nickname
     answer.append(("msg", f"Tudo bem{name_text}. Como posso te ajudar então?"))
     return answer
@@ -110,7 +110,7 @@ def ShowReminders(message, **fields):
     if controller.user.reminders:
 
         answer = "Estes são os seus lembretes:\n\n"
-        if controller.user.nickname:
+        if controller.user.nickname and flip_coin(0.3):
             answer = f"{controller.user.nickname}, estes são os seus lembretes:\n\n"
 
         answer += "\n".join(
@@ -120,7 +120,7 @@ def ShowReminders(message, **fields):
 
     else:
         answer = "Você não tem lembretes marcados."
-        if controller.user.nickname:
+        if controller.user.nickname and flip_coin(0.3):
             answer = f"{controller.user.nickname}, você não tem lembretes marcados."
 
     answers.append(("msg", answer))
@@ -390,7 +390,7 @@ def Pokemon(message, **fields):
 def Agradecimento(message, **fields):
     answers = []
     name_text = ""
-    if controller.user.nickname:
+    if controller.user.nickname and flip_coin(0.7):
         name_text = f", {controller.user.nickname}"
     answer = f"Disponha{name_text}! Se precisar, é só chamar."
     answers.append(("msg", answer))
@@ -407,7 +407,7 @@ def SecredLinkGenerate(message, **fields):
     try:
         n = int(re.findall(r"\d+", message)[0])
     except Exception:
-        if controller.user.nickname:
+        if controller.user.nickname and flip_coin(0.3):
             log = f"{controller.user.nickname}, não identifiquei o número."
         else:
             log = "Não identifiquei o número."
@@ -421,7 +421,7 @@ def SecredLinkGenerate(message, **fields):
             else:
                 log = "Não encontrei nenhum link salvo."
         else:
-            if controller.user.nickname:
+            if controller.user.nickname and flip_coin():
                 name_text = f", {controller.user.nickname}"
             answer1 = f"Aqui está{name_text}!\n"
             answer1 += "\n\n".join(link[0] for link in links)
@@ -445,7 +445,7 @@ def SecredLinkAdd(message, **fields):
     links = get_link(message)
     log = ""
     name_text = ""
-    if controller.user.nickname:
+    if controller.user.nickname and flip_coin():
         name_text = f", {controller.user.nickname}"
     if len(links) > 0:
         for link in links:
@@ -492,7 +492,7 @@ def Test(message, **fields):
 def Undefined(message, **fields):
     answers = []
     name_text = ""
-    if controller.user.nickname:
+    if controller.user.nickname and flip_coin():
         name_text = f", {controller.user.nickname}"
     answer = f"Sinto muito{name_text}. Não entendi."
     answers.append(("msg", answer))

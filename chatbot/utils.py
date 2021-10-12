@@ -1,5 +1,10 @@
+import random
 import string
 import unidecode
+
+
+def flip_coin(true_ratio=0.5):
+    return random.random() <= true_ratio
 
 
 def clear_text(text):
