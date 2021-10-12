@@ -7,7 +7,7 @@ from datetime import datetime
 from flask_restful import Api
 from flask import Flask, request
 
-from models.alice import controller
+from chatbot.alice import controller
 from utils.datetime_tools import utc2local
 from utils.database import HerokuDB
 
