@@ -2,17 +2,18 @@ import os
 import re
 import json
 import pytz
-import string
 import telebot
 import requests
-import unidecode
 
 from datetime import datetime, timedelta
 
 from utils.database import HerokuDB
 from utils.investments import Stocks
-from utils.user_manager import User, Users, Reminder
+from utils.user_manager import Reminder
 from utils.datetime_tools import fromisoformat, local2utc, next_weekday, utc2local, weekdays
+
+from chatbot.controller import Controller
+from chatbot.utils import remove_comms, clear_text, get_link
 
 # from utils.image_tools import cartoon_generator
 
@@ -28,149 +29,7 @@ def zlog(message):
     bot.send_message(ADMIN_USER_ID, message)
 
 
-class Helper:
-    def __init__(self):
-        self.public_adapters = []
-        self.admin_adapters = []
-
-
-class Controller:
-    def __init__(self):
-        self.adapters = []
-        self.classes = json.loads(open("classes.json").read())
-        self.classification = []
-        self.commands = []
-        self.helper = Helper()
-        self.user_id = None
-        self.user = None
-
-    def add_adapter(
-        self, reqs=[], comms=[], only_admin=False, after_classification=[], after_commands=[], description="", user_inputs=[]
-    ):
-        def create_adapter(func):
-            def adapter(message, **fields):
-                if self.match(reqs, comms):
-                    if (only_admin and self.user_id == ADMIN_USER_ID) or not only_admin:
-                        ans = func(message, **fields)
-                        self.classification = after_classification
-                        self.commands = after_commands
-                        return ans
-
-            self.adapters.append(adapter)
-            if description:
-                adapter_helper = {"description": description, "user_inputs": user_inputs}
-                adapter_helper["comms"] = comms if type(comms) == list else []
-                if only_admin:
-                    self.helper.admin_adapters.append(adapter_helper)
-                else:
-                    self.helper.public_adapters.append(adapter_helper)
-            return adapter
-
-        return create_adapter
-
-    def classific(self, message):
-        self.classification = []
-        self.commands = []
-        if len(message.split('"')) == 3:
-            message = message.split('"')[0] + message.split('"')[2]
-        for word in self.classes.keys():
-            if any(x in self.classes[word] for x in ClearText(message).split()):
-                self.classification.append(word)
-
-        for word in message.split():
-            if word.startswith("/"):
-                self.commands.append(word[1:])
-
-    def match(self, reqs=None, comms=None):
-        if reqs:
-            if all(x in self.classification for x in reqs):
-                return True
-        if comms:
-            if all(x in self.commands for x in comms):
-                return True
-        if not (reqs or comms):
-            return True
-
-        return False
-
-    def get_response(self, text=None, image=None):
-        self.get_user()
-        self.classific(text)
-        # return self.send([("msg", len(self.adapters))])
-        for adap in self.adapters:
-            try:
-                ans = adap(text, image=image)
-            except Exception as e:
-                self.classification = []
-                self.commands = []
-                raise e
-            if ans:
-                ans += self.postscriptum()
-                return self.send(ans)
-        # return self.send([("msg", json.dumps(self.classification)), ("msg", json.dumps(self.commands))])
-
-    def get_user(self):
-        users = Users()
-        self.user = users.get_user(self.user_id)
-        if not self.user:
-            self.user = User(telegram_id=self.user_id)
-            users.add_user(self.user)
-
-    def postscriptum(self):
-        answers = []
-
-        if not self.user.nickname:
-            answer = "Eu ainda não sei como te chamar."
-            answer += " Você pode definir como quer ser chamado usando o comando /definir_nome"
-            answer += " seguido do seu nome ou apelido."
-            answers.append(("msg", answer))
-
-        return answers
-
-    def send(self, ans):
-        self.answer = ans
-        return self.answer
-
-
 controller = Controller()
-
-# # Utils
-
-
-def ClearText(text):
-    # stemmer = nltk.stem.RSLPStemmer()
-    if type(text) == str:
-        x = text.split()
-    else:
-        x = text
-    if type(x) == list:
-        newx = list()
-        for word in x:
-            w = word.lower()
-            w = unidecode.unidecode(w)
-            for c in list(string.punctuation):
-                w = w.replace(c, " ")
-            if len(w) > 0:
-                if w[-1] == " ":
-                    w = w[:-1]
-                # print('{} -> {}'.format(word, w))
-            newx.append(w)
-        text = " ".join(newx)
-    else:
-        text = " ".join(text)
-    return text
-
-
-def get_link(ans):
-    links = []
-    for term in ans.split():
-        if ".com" in term or "http" in term:
-            links.append(term)
-    return links
-
-
-def remove_comms(text):
-    return " ".join([word for word in text.split() if not word.startswith("/")])
 
 
 @controller.add_adapter(comms=["help"])
@@ -270,10 +129,7 @@ def ShowReminders(message, **fields):
 
 
 @controller.add_adapter(
-    reqs=["reminder"],
-    comms=["lembrete"],
-    description="Programar lembrete",
-    user_inputs=['"nome do lembrete"', "data", "horário"],
+    reqs=["reminder"], comms=["lembrete"], description="Programar lembrete", user_inputs=['"nome do lembrete"', "data", "horário"],
 )
 def SetReminder(message, **fields):
 
@@ -501,7 +357,7 @@ def Stocks_ranking(message, **fields):
 @controller.add_adapter(reqs=["pokemon"], comms=["pokemon"], description="Consulta de Pokémon", user_inputs=["nome ou id"])
 def Pokemon(message, **fields):
     answers = []
-    pokemon_id = re.search(r"pokemon\s[\w\-]*", ClearText(message)).group().split()[1].lower()
+    pokemon_id = re.search(r"pokemon\s[\w\-]*", clear_text(message)).group().split()[1].lower()
     r = requests.get(f"https://pokeapi.co/api/v2/pokemon/{pokemon_id}")
     if r.ok:
         pokemon = json.loads(r.content)
