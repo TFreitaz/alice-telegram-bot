@@ -101,7 +101,7 @@ def SetName(message, **fields):
     return answers
 
 
-@controller.add_adaptet(
+@controller.add_adapter(
     comms=["comprei"],
     description="Registrar itens comprados pelo usuário",
     user_inputs=["item 1 (quantidade)", "item 2 (quantidade)", "item 3 (quantidade)"],
