@@ -101,6 +101,34 @@ def SetName(message, **fields):
     return answers
 
 
+@controller.add_adaptet(
+    comms=["comprei"],
+    description="Registrar itens comprados pelo usuário",
+    user_inputs=["item 1 (quantidade)", "item 2 (quantidade)", "item 3 (quantidade)"],
+)
+def groceries_registry(message, **fields):
+    answers = []
+
+    itermsg = re.finditer(r"(\w+)(\s\((\d+)\s*(\w*)\))?[,\s;]*", remove_comms(message))
+
+    answer = "Foram comprados:"
+
+    for s in itermsg:
+        item = s.group(1)
+        quantity = s.group(3)
+        unity = s.group(4)
+
+        if quantity is not None:
+            if unity is not None:
+                answer += f"\n - {quantity} {unity} de {item}"
+            else:
+                answer += f"\n - {quantity} {item}"
+        else:
+            answer += f"\n - {item}"
+
+    answers.append(("msg", answer))
+
+
 @controller.add_adapter(comms=["mostrar_lembretes"], reqs=["reminders"], description="Mostrar seus lembretes.")
 def ShowReminders(message, **fields):
     answers = []
