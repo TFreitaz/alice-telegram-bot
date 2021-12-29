@@ -118,8 +118,8 @@ def groceries_registry(message, **fields):
         quantity = s.group(3)
         unity = s.group(4)
 
-        if quantity is not None:
-            if unity is not None:
+        if quantity:
+            if unity:
                 answer += f"\n - {quantity} {unity} de {item}"
             else:
                 answer += f"\n - {quantity} {item}"
