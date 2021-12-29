@@ -128,6 +128,8 @@ def groceries_registry(message, **fields):
 
     answers.append(("msg", answer))
 
+    return answers
+
 
 @controller.add_adapter(comms=["mostrar_lembretes"], reqs=["reminders"], description="Mostrar seus lembretes.")
 def ShowReminders(message, **fields):
