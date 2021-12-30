@@ -136,6 +136,45 @@ def purchase_registry(message, **fields):
     return answers
 
 
+@controller.add_adapter(comms=["mostrar_compras"], reqs=["mostrar", "compras"], description="Mostrar última compra de cada item.")
+def show_purchases(message, **fields):
+    answers = []
+
+    db = HerokuDB()
+
+    db.cursor.execute(
+        f"""
+        SELECT * FROM purchases 
+        WHERE
+            telegram_id={controller.user_id}
+        AND datetime=(
+            SELECT MAX(datetime) FROM purchases AS f
+            WHERE
+                telegram_id={controller.user_id}
+            AND
+                purchases.item=f.item)
+        ORDER BY datetime DESC"""
+    )
+    r = db.cursor.fetchall()
+
+    answer = "Estas são suas últimas compras:\n"
+    last_date = None
+    for purchase in r:
+        _, item, quantity, unity, _ = purchase
+        if last_date is None or last_date != purchase[-1].strftime("%d/%m/%Y"):
+            last_date = purchase[-1].strftime("%d/%m/%Y")
+            answer += f"\n{last_date}"
+        if quantity:
+            if unity:
+                answer += f"\n - {quantity} {unity} de {item}"
+            else:
+                answer += f"\n - {quantity} {item}"
+        else:
+            answer += f"\n - {item}"
+
+    answers.append(("msg", answer))
+
+
 @controller.add_adapter(comms=["mostrar_lembretes"], reqs=["reminders"], description="Mostrar seus lembretes.")
 def ShowReminders(message, **fields):
     answers = []
