@@ -106,7 +106,7 @@ def SetName(message, **fields):
     description="Registrar itens comprados pelo usuário",
     user_inputs=["item 1 (quantidade)", "item 2 (quantidade)", "item 3 (quantidade)"],
 )
-def groceries_registry(message, **fields):
+def purchase_registry(message, **fields):
     answers = []
 
     db = HerokuDB()
