@@ -173,6 +173,7 @@ def show_purchases(message, **fields):
             answer += f"\n - {item}"
 
     answers.append(("msg", answer))
+    return answers
 
 
 @controller.add_adapter(comms=["mostrar_lembretes"], reqs=["reminders"], description="Mostrar seus lembretes.")
