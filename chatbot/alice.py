@@ -146,11 +146,11 @@ def show_purchases(message, **fields):
         f"""
         SELECT * FROM purchases 
         WHERE
-            telegram_id={controller.user_id}
+            telegram_id='{controller.user_id}'
         AND datetime=(
             SELECT MAX(datetime) FROM purchases AS f
             WHERE
-                telegram_id={controller.user_id}
+                telegram_id='{controller.user_id}'
             AND
                 purchases.item=f.item)
         ORDER BY datetime DESC"""
