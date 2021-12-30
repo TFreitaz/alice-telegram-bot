@@ -112,14 +112,14 @@ def groceries_registry(message, **fields):
     db = HerokuDB()
     now = utc2local(datetime.now()).strftime("%Y-%m-%d %H:%M:%S")
 
-    itermsg = re.finditer(r"(\w+)(\s\((\d+)\s*(\w*)\))?[,\s;]*", remove_comms(message))
+    itermsg = re.finditer(r"(\w+)(\s\((\d+([.,]\d+)?)\s*(\w*)\))?[,\s;]*", remove_comms(message))
 
     answer = f"Foram comprados no dia {now}:"
 
     for s in itermsg:
         item = s.group(1)
         quantity = s.group(3)
-        unity = s.group(4)
+        unity = s.group(5)
 
         db.insert("purchases", values=(controller.user_id, item, quantity, unity, now))
 
