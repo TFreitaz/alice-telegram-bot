@@ -121,7 +121,7 @@ def groceries_registry(message, **fields):
         quantity = s.group(3)
         unity = s.group(4)
 
-        db.insert("purchase", (controller.user.user_id, item, quantity, unity, now))
+        db.insert("purchase", (controller.user_id, item, quantity, unity, now))
 
         if quantity:
             if unity:
