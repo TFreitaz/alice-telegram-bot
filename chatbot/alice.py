@@ -222,7 +222,7 @@ def groceries_list(message, **fields):
         u = np.mean(ratios)
         d = np.mean(deltas)
         delta_now = (datetime.today() - item[-1]["date"]).days + d
-        qtd = round(delta_now / u - float(item[-1]["quantity"]), 0)
+        qtd = int(round(delta_now / u - float(item[-1]["quantity"]), 0))
         answer += f"\n- {qtd} {item_name}"
 
     answers.append(("msg", answer))
