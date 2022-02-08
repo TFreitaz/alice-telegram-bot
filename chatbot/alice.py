@@ -178,7 +178,7 @@ def show_purchases(message, **fields):
 
 
 @controller.add_adapter(
-    comms=["lista_de_compras"], description="Sugerir itens a serem comprados de acordo com suas compras passadas."
+    comms=["sugerir_compras"], description="Sugerir itens a serem comprados de acordo com suas compras passadas."
 )
 def groceries_list(message, **fields):
 
@@ -191,12 +191,6 @@ def groceries_list(message, **fields):
         SELECT * FROM purchases 
         WHERE
             telegram_id='{controller.user_id}'
-        AND datetime=(
-            SELECT MAX(datetime) FROM purchases AS f
-            WHERE
-                telegram_id='{controller.user_id}'
-            AND
-                purchases.item=f.item)
         ORDER BY datetime DESC"""
     )
     r = db.cursor.fetchall()
