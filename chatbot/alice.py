@@ -4,6 +4,7 @@ import json
 import pytz
 import telebot
 import requests
+import numpy as np
 
 from datetime import datetime, timedelta
 
@@ -176,6 +177,64 @@ def show_purchases(message, **fields):
     return answers
 
 
+@controller.add_adapter(
+    comms=["lista_de_compras"], description="Sugerir itens a serem comprados de acordo com suas compras passadas."
+)
+def groceries_list(message, **fields):
+
+    answers = []
+
+    db = HerokuDB()
+
+    db.cursor.execute(
+        f"""
+        SELECT * FROM purchases 
+        WHERE
+            telegram_id='{controller.user_id}'
+        AND datetime=(
+            SELECT MAX(datetime) FROM purchases AS f
+            WHERE
+                telegram_id='{controller.user_id}'
+            AND
+                purchases.item=f.item)
+        ORDER BY datetime DESC"""
+    )
+    r = db.cursor.fetchall()
+
+    items = {}
+    for raw in r:
+        item = raw[1]
+        if item not in items:
+            items[item] = []
+        items[item].append({"date": raw[4], "quantity": raw[2]})
+
+    answer = "Sugestões de compras:\n"
+
+    for item_name in items:
+        ratios = []
+        deltas = []
+        if len(items[item_name]) <= 1:
+            continue
+        item = items[item_name]
+        for i in range(len(item)):
+            if item[i]["quantity"] == "None":
+                item[i]["quantity"] = 1
+        for i in range(1, len(item)):
+            delta_date = (item[i]["date"] - item[i - 1]["date"]).days
+            q = float(item[i - 1]["quantity"])
+            ratio = delta_date / q
+            ratios.append(ratio)
+            deltas.append(delta_date)
+        u = np.mean(ratios)
+        d = np.mean(deltas)
+        delta_now = (datetime.today() - item[-1]["date"]).days + d
+        qtd = round(delta_now / u - float(item[-1]["quantity"]), 0)
+        answer += f"\n- {qtd} {item_name}"
+
+    answers.append(("msg", answer))
+    return answers
+
+
 @controller.add_adapter(comms=["mostrar_lembretes"], reqs=["reminders"], description="Mostrar seus lembretes.")
 def ShowReminders(message, **fields):
     answers = []
@@ -204,7 +263,10 @@ def ShowReminders(message, **fields):
 
 
 @controller.add_adapter(
-    reqs=["reminder"], comms=["lembrete"], description="Programar lembrete", user_inputs=['"nome do lembrete"', "data", "horário"],
+    reqs=["reminder"],
+    comms=["lembrete"],
+    description="Programar lembrete",
+    user_inputs=['"nome do lembrete"', "data", "horário"],
 )
 def SetReminder(message, **fields):
 
