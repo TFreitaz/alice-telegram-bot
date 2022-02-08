@@ -223,7 +223,8 @@ def groceries_list(message, **fields):
         d = np.mean(deltas)
         delta_now = (datetime.today() - item[-1]["date"]).days + d
         qtd = int(round(delta_now / u - float(item[-1]["quantity"]), 0))
-        answer += f"\n- {qtd} {item_name}"
+        if qtd > 0:
+            answer += f"\n- {qtd} {item_name}"
 
     answers.append(("msg", answer))
     return answers
