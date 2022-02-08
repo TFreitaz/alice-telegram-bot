@@ -191,7 +191,7 @@ def groceries_list(message, **fields):
         SELECT * FROM purchases 
         WHERE
             telegram_id='{controller.user_id}'
-        ORDER BY datetime DESC"""
+        ORDER BY datetime ASC"""
     )
     r = db.cursor.fetchall()
 
