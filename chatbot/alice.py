@@ -118,7 +118,7 @@ def purchase_registry(message, **fields):
     answer = f"Foram comprados no dia {now}:"
 
     for s in itermsg:
-        item = s.group(1)
+        item = s.group(1).lower()
         quantity = s.group(3)
         unity = s.group(5)
 
