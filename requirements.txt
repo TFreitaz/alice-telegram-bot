@@ -10,3 +10,4 @@ python-dateutil
 scipy==1.4.1
 SpeechRecognition==3.8.1
 Unidecode==1.1.1
+numpy==1.19.5
