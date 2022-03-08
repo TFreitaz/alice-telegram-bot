@@ -206,7 +206,7 @@ def groceries_list(message, **fields):
         item = raw[1]
         if item not in items:
             items[item] = []
-        items[item].append({"date": raw[4], "quantity": raw[2]})
+        items[item].append({"date": raw[4], "quantity": raw[2], "unity": raw[3]})
 
     answer = "Sugestões de compras:\n"
 
@@ -216,9 +216,14 @@ def groceries_list(message, **fields):
         if len(items[item_name]) <= 1:
             continue
         item = items[item_name]
+        unity = None
         for i in range(len(item)):
             if item[i]["quantity"] == "None":
                 item[i]["quantity"] = 1
+            if item[i]["unity"] is not None:
+                if unity is None:
+                    unity = item[i]["unity"]
+                elif unity !=
         for i in range(1, len(item)):
             delta_date = (item[i]["date"] - item[i - 1]["date"]).days
             q = float(item[i - 1]["quantity"])
@@ -230,7 +235,17 @@ def groceries_list(message, **fields):
         delta_now = (datetime.today() - item[-1]["date"]).days + d
         qtd = int(round(delta_now / u - float(item[-1]["quantity"]), 0))
         if qtd > 0:
-            answer += f"\n- {qtd} {item_name}"
+            answer += f"\n- {qtd}"
+            cursor.execute(f"""SELECT unity, AVG(CAST(quantity AS DECIMAL)) FROM purchases WHERE item = '{item_name}' GROUP BY unity""")
+            r = cursor.fetchall()
+            unity = None
+            diff = float('inf')
+            for u, m in r:
+                if abs(qtd - m) < diff:
+                    unity = u
+            if unity != "None" and unity is None:
+                answer += f" {unity} de"
+            answer += f" {item_name}"
 
     answers.append(("msg", answer))
     return answers
