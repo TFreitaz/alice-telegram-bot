@@ -113,7 +113,13 @@ def purchase_registry(message, **fields):
     db = HerokuDB()
     now = utc2local(datetime.now()).strftime("%Y-%m-%d %H:%M:%S")
 
-    itermsg = re.finditer(r"(\w+)(\s\((\d+([.,]\d+)?)\s*(\w*)\))?[,\s;]*", remove_comms(message))
+    re_product_name = r"(\w+(\s\w+)*)"
+    re_product_quantity = r"(\d+([.,]\d+)?)"
+    re_product_unity = r"(\w*)"
+    re_product_details = f"\\({re_product_quantity}\\s*{re_product_unity}\\)"
+    re_separetor = r"[,;]*"
+    re_product = f"{re_product_name}(\\s{re_product_details})?{re_separetor}"
+    itermsg = re.finditer(re_product, message)
 
     answer = f"Foram comprados no dia {now}:"
 
