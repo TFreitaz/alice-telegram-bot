@@ -111,7 +111,7 @@ def purchase_registry(message, **fields):
     answers = []
 
     db = HerokuDB()
-    now = utc2local(datetime.now()).strftime("%Y-%m-%d %H:%M:%S")
+    now = utc2local(datetime.now()).strftime("%d/%m/%Y às %H:%M")
 
     re_product_name = r"(\w+(\s\w+)*)"
     re_product_quantity = r"(\d+([.,]\d+)?)"
