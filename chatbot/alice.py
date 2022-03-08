@@ -232,7 +232,7 @@ def groceries_list(message, **fields):
         qtd = int(round(delta_now / u - float(item[-1]["quantity"]), 0))
         if qtd > 0:
             answer += f"\n- {qtd}"
-            cursor.execute(
+            db.cursor.execute(
                 f"""SELECT unity, AVG(CAST(quantity AS DECIMAL)) FROM purchases WHERE item = '{item_name}' GROUP BY unity"""
             )
             r = cursor.fetchall()
