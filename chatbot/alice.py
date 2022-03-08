@@ -235,7 +235,7 @@ def groceries_list(message, **fields):
             db.cursor.execute(
                 f"""SELECT unity, AVG(CAST(quantity AS DECIMAL)) FROM purchases WHERE item = '{item_name}' GROUP BY unity"""
             )
-            r = cursor.fetchall()
+            r = db.cursor.fetchall()
             unity = None
             diff = float("inf")
             for u, m in r:
