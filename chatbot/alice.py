@@ -241,7 +241,7 @@ def groceries_list(message, **fields):
             for u, m in r:
                 if abs(qtd - m) < diff:
                     unity = u
-            if unity != "None" and unity is not None:
+            if unity and unity != "None" and unity is not None:
                 answer += f" {unity} de"
             answer += f" {item_name}"
 
