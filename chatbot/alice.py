@@ -113,6 +113,8 @@ def root_shopping_list_registry(message, **fields):
     db = HerokuDB()
     now = utc2local(datetime.now()).isoformat()
 
+    message = message.replace("/comprar", "")
+
     re_product_name = r"(\w+(\s\w+)*)"
     re_product_quantity = r"(\d+([.,]\d+)?)"
     re_product_unity = r"(\w*)"
@@ -156,8 +158,6 @@ def purchase_registry(message, **fields):
     db = HerokuDB()
     now = utc2local(datetime.now()).strftime("%d/%m/%Y às %H:%M")
 
-    message = message[len("comprar") :]
-
     re_product_name = r"(\w+(\s\w+)*)"
     re_product_quantity = r"(\d+([.,]\d+)?)"
     re_product_unity = r"(\w*)"
@@ -165,11 +165,6 @@ def purchase_registry(message, **fields):
     re_separetor = r"[,;]*"
     re_product = f"{re_product_name}(\\s{re_product_details})?{re_separetor}"
     itermsg = re.finditer(re_product, message)
-
-    answer = message
-    answers.append(("msg", answer))
-
-    return answers
 
     answer = f"Foram comprados no dia {now}:"
 
