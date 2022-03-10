@@ -166,6 +166,11 @@ def purchase_registry(message, **fields):
     re_product = f"{re_product_name}(\\s{re_product_details})?{re_separetor}"
     itermsg = re.finditer(re_product, message)
 
+    answer = message
+    answers.append(("msg", answer))
+
+    return answers
+
     answer = f"Foram comprados no dia {now}:"
 
     for s in itermsg:
