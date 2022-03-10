@@ -103,6 +103,49 @@ def SetName(message, **fields):
 
 
 @controller.add_adapter(
+    comms=["comprar"],
+    description="Registrar itens na lista de compras do usuário",
+    user_inputs=["item 1 (quantidade)", "item 2 (quantidade)", "item 3 (quantidade)"],
+)
+def root_shopping_list_registry(message, **fields):
+    answers = []
+
+    db = HerokuDB()
+    now = utc2local(datetime.now()).isoformat()
+
+    re_product_name = r"(\w+(\s\w+)*)"
+    re_product_quantity = r"(\d+([.,]\d+)?)"
+    re_product_unity = r"(\w*)"
+    re_product_details = f"\\({re_product_quantity}\\s*{re_product_unity}\\)"
+    re_separetor = r"[,;]*"
+    re_product = f"{re_product_name}(\\s{re_product_details})?{re_separetor}"
+    itermsg = re.finditer(re_product, message)
+
+    answer = "Foram adicionados à lista:"
+
+    for s in itermsg:
+        item = s.group(1).lower()
+        quantity = s.group(3)
+        unity = s.group(5)
+
+        note = s.group()
+
+        db.insert("notes", values=(controller.user_id, "root_shopping_list", note, now))
+
+        if quantity:
+            if unity:
+                answer += f"\n - {quantity} {unity} de {item}"
+            else:
+                answer += f"\n - {quantity} {item}"
+        else:
+            answer += f"\n - {item}"
+
+    answers.append(("msg", answer))
+
+    return answers
+
+
+@controller.add_adapter(
     comms=["comprei"],
     description="Registrar itens comprados pelo usuário",
     user_inputs=["item 1 (quantidade)", "item 2 (quantidade)", "item 3 (quantidade)"],
