@@ -160,6 +160,8 @@ def purchase_registry(message, **fields):
     now = utc2local(datetime.now())
     now_str = now.strftime("%d/%m/%Y às %H:%M")
 
+    message = message.replace("/comprei", "")
+
     re_product_name = r"(\w+(\s\w+)*)"
     re_product_quantity = r"(\d+([.,]\d+)?)"
     re_product_unity = r"(\w*)"
