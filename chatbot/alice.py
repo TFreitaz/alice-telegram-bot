@@ -128,8 +128,8 @@ def root_shopping_list_registry(message, **fields):
 
     for s in itermsg:
         item = find_product(s.group(1).lower(), controller.user_id)
-        quantity = s.group(3)
-        unity = s.group(5)
+        quantity = s.group(4)
+        unity = s.group(6)
 
         note = s.group()
 
@@ -174,8 +174,8 @@ def purchase_registry(message, **fields):
 
     for s in itermsg:
         item = find_product(s.group(1).lower(), controller.user_id)
-        quantity = s.group(3)
-        unity = s.group(5)
+        quantity = s.group(4)
+        unity = s.group(6)
 
         db.insert("purchases", values=(controller.user_id, item, quantity, unity, now))
 
