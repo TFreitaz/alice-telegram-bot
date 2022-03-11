@@ -157,7 +157,7 @@ def purchase_registry(message, **fields):
     answers = []
 
     db = HerokuDB()
-    now = utc2local(datetime.now()).strftime("%d/%m/%Y às %H:%M")
+    now = utc2local(datetime.now())
 
     re_product_name = r"(\w+(\s\w+)*)"
     re_product_quantity = r"(\d+([.,]\d+)?)"
@@ -167,7 +167,7 @@ def purchase_registry(message, **fields):
     re_product = f"{re_product_name}(\\s{re_product_details})?{re_separetor}"
     itermsg = re.finditer(re_product, message)
 
-    answer = f"Foram comprados no dia {now}:"
+    answer = f"Foram comprados no dia {now.strftime("%d/%m/%Y às %H:%M")}:"
 
     for s in itermsg:
         item = find_product(s.group(1).lower(), controller.user_id)
