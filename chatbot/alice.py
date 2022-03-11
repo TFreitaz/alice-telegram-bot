@@ -15,6 +15,7 @@ from utils.datetime_tools import fromisoformat, local2utc, next_weekday, utc2loc
 
 from chatbot.controller import Controller
 from chatbot.utils import remove_comms, clear_text, get_link, flip_coin
+from chatbot.features.purchases import find_product
 
 # from utils.image_tools import cartoon_generator
 
@@ -126,7 +127,7 @@ def root_shopping_list_registry(message, **fields):
     answer = "Foram adicionados à lista:"
 
     for s in itermsg:
-        item = s.group(1).lower()
+        item = find_product(s.group(1).lower())
         quantity = s.group(3)
         unity = s.group(5)
 
@@ -169,7 +170,7 @@ def purchase_registry(message, **fields):
     answer = f"Foram comprados no dia {now}:"
 
     for s in itermsg:
-        item = s.group(1).lower()
+        item = find_product(s.group(1).lower())
         quantity = s.group(3)
         unity = s.group(5)
 
