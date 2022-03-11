@@ -127,7 +127,7 @@ def root_shopping_list_registry(message, **fields):
     answer = "Foram adicionados à lista:"
 
     for s in itermsg:
-        item = find_product(s.group(1).lower())
+        item = find_product(s.group(1).lower(), controller.user_id)
         quantity = s.group(3)
         unity = s.group(5)
 
@@ -170,7 +170,7 @@ def purchase_registry(message, **fields):
     answer = f"Foram comprados no dia {now}:"
 
     for s in itermsg:
-        item = find_product(s.group(1).lower())
+        item = find_product(s.group(1).lower(), controller.user_id)
         quantity = s.group(3)
         unity = s.group(5)
 
