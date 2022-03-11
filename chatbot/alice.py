@@ -15,6 +15,7 @@ from utils.datetime_tools import fromisoformat, local2utc, next_weekday, utc2loc
 
 from chatbot.controller import Controller
 from chatbot.utils import remove_comms, clear_text, get_link, flip_coin
+from chatbot.features.purchases import find_product
 
 # from utils.image_tools import cartoon_generator
 
@@ -103,6 +104,51 @@ def SetName(message, **fields):
 
 
 @controller.add_adapter(
+    comms=["comprar"],
+    description="Registrar itens na lista de compras do usuário",
+    user_inputs=["item 1 (quantidade)", "item 2 (quantidade)", "item 3 (quantidade)"],
+)
+def root_shopping_list_registry(message, **fields):
+    answers = []
+
+    db = HerokuDB()
+    now = utc2local(datetime.now()).isoformat()
+
+    message = message.replace("/comprar", "")
+
+    re_product_name = r"(\w+(\s\w+)*)"
+    re_product_quantity = r"(\d+([.,]\d+)?)"
+    re_product_unity = r"(\w*)"
+    re_product_details = f"\\({re_product_quantity}\\s*{re_product_unity}\\)"
+    re_separetor = r"[,;]*"
+    re_product = f"{re_product_name}(\\s{re_product_details})?{re_separetor}"
+    itermsg = re.finditer(re_product, message)
+
+    answer = "Foram adicionados à lista:"
+
+    for s in itermsg:
+        item = find_product(s.group(1).lower(), controller.user_id)
+        quantity = s.group(4)
+        unity = s.group(6)
+
+        note = s.group()
+
+        db.insert("notes", values=(controller.user_id, "root_shopping_list", note, now))
+
+        if quantity:
+            if unity:
+                answer += f"\n - {quantity} {unity} de {item}"
+            else:
+                answer += f"\n - {quantity} {item}"
+        else:
+            answer += f"\n - {item}"
+
+    answers.append(("msg", answer))
+
+    return answers
+
+
+@controller.add_adapter(
     comms=["comprei"],
     description="Registrar itens comprados pelo usuário",
     user_inputs=["item 1 (quantidade)", "item 2 (quantidade)", "item 3 (quantidade)"],
@@ -111,16 +157,25 @@ def purchase_registry(message, **fields):
     answers = []
 
     db = HerokuDB()
-    now = utc2local(datetime.now()).strftime("%Y-%m-%d %H:%M:%S")
+    now = utc2local(datetime.now())
+    now_str = now.strftime("%d/%m/%Y às %H:%M")
 
-    itermsg = re.finditer(r"(\w+)(\s\((\d+([.,]\d+)?)\s*(\w*)\))?[,\s;]*", remove_comms(message))
+    message = message.replace("/comprei", "")
 
-    answer = f"Foram comprados no dia {now}:"
+    re_product_name = r"(\w+(\s\w+)*)"
+    re_product_quantity = r"(\d+([.,]\d+)?)"
+    re_product_unity = r"(\w*)"
+    re_product_details = f"\\({re_product_quantity}\\s*{re_product_unity}\\)"
+    re_separetor = r"[,;]*"
+    re_product = f"{re_product_name}(\\s{re_product_details})?{re_separetor}"
+    itermsg = re.finditer(re_product, message)
+
+    answer = f"Foram comprados no dia {now_str}:"
 
     for s in itermsg:
-        item = s.group(1).lower()
-        quantity = s.group(3)
-        unity = s.group(5)
+        item = find_product(s.group(1).lower(), controller.user_id)
+        quantity = s.group(4)
+        unity = s.group(6)
 
         db.insert("purchases", values=(controller.user_id, item, quantity, unity, now))
 
@@ -210,6 +265,7 @@ def groceries_list(message, **fields):
         if len(items[item_name]) <= 1:
             continue
         item = items[item_name]
+        unity = None
         for i in range(len(item)):
             if item[i]["quantity"] == "None":
                 item[i]["quantity"] = 1
@@ -224,7 +280,19 @@ def groceries_list(message, **fields):
         delta_now = (datetime.today() - item[-1]["date"]).days + d
         qtd = int(round(delta_now / u - float(item[-1]["quantity"]), 0))
         if qtd > 0:
-            answer += f"\n- {qtd} {item_name}"
+            answer += f"\n- {qtd}"
+            db.cursor.execute(
+                f"""SELECT unity, AVG(CAST(quantity AS DECIMAL)) FROM purchases WHERE item = '{item_name}' GROUP BY unity"""
+            )
+            r = db.cursor.fetchall()
+            unity = None
+            diff = float("inf")
+            for u, m in r:
+                if abs(qtd - m) < diff:
+                    unity = u
+            if unity and unity != "None" and unity is not None:
+                answer += f" {unity} de"
+            answer += f" {item_name}"
 
     answers.append(("msg", answer))
     return answers
