@@ -63,6 +63,8 @@ def Help(message, **fields):
     return answers
 
 
+e
+
 # Feature functions
 
 
@@ -175,9 +177,10 @@ def purchase_registry(message, **fields):
     for s in itermsg:
         item = find_product(s.group(1).lower(), controller.user_id)
         quantity = s.group(4)
+        quantity_ef = quantity if quantity is not None else 1
         unity = s.group(6)
 
-        db.insert("purchases", values=(controller.user_id, item, quantity, unity, now))
+        db.insert("purchases", values=(controller.user_id, item, quantity_ef, unity, now))
 
         if quantity:
             if unity:
