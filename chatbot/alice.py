@@ -289,7 +289,7 @@ def groceries_list(message, **fields):
     db.cursor.execute(
         f"""
         SELECT
-            item, quantity, unity FROM purchases 
+            item, quantity, unity FROM shopping_list 
         WHERE
             telegram_id='{controller.user_id}'
         ORDER BY datetime ASC"""
