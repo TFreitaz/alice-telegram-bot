@@ -63,8 +63,6 @@ def Help(message, **fields):
     return answers
 
 
-e
-
 # Feature functions
 
 
