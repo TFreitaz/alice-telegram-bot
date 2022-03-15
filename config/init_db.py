@@ -48,7 +48,9 @@ if "notes" not in tables:
 
 if "shopping_list" not in tables:
     print("Criando tabela shopping_list")
-    cursor.execute("CREATE TABLE shopping_list(telegram_id varchar, k item varchar, quantity varchar, unity varchar, datetime TIMESTAMP);")
+    cursor.execute(
+        "CREATE TABLE shopping_list(telegram_id varchar, item varchar, quantity varchar, unity varchar, datetime TIMESTAMP);"
+    )
 
 print("SALVANDO ALTERAÇÕES...")
 conn.commit()
