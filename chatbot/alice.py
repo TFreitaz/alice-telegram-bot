@@ -281,7 +281,7 @@ def groceries_list(message, **fields):
         qtd = int(round(delta_now / u - float(item[-1]["quantity"]), 0))
         if qtd > 0:
             answer += f"\n- {qtd}"
-            unity = estimate_unity(controller.user_id, item, qtd)
+            unity = estimate_unity(controller.user_id, item_name, qtd)
             if unity and unity != "None" and unity is not None:
                 answer += f" {unity} de"
             answer += f" {item_name}"
