@@ -15,7 +15,7 @@ from utils.datetime_tools import fromisoformat, local2utc, next_weekday, utc2loc
 
 from chatbot.controller import Controller
 from chatbot.utils import remove_comms, clear_text, get_link, flip_coin
-from chatbot.features.purchases import find_product
+from chatbot.features.purchases import find_product, estimate_unity
 
 # from utils.image_tools import cartoon_generator
 
@@ -129,11 +129,10 @@ def root_shopping_list_registry(message, **fields):
     for s in itermsg:
         item = find_product(s.group(1).lower(), controller.user_id)
         quantity = s.group(4)
+        quantity_ef = quantity if quantity is not None else 1
         unity = s.group(6)
 
-        note = s.group()
-
-        db.insert("notes", values=(controller.user_id, "root_shopping_list", note, now))
+        db.insert("shopping_list", values=(controller.user_id, item, quantity_ef, unity, now))
 
         if quantity:
             if unity:
@@ -175,9 +174,10 @@ def purchase_registry(message, **fields):
     for s in itermsg:
         item = find_product(s.group(1).lower(), controller.user_id)
         quantity = s.group(4)
+        quantity_ef = quantity if quantity is not None else 1
         unity = s.group(6)
 
-        db.insert("purchases", values=(controller.user_id, item, quantity, unity, now))
+        db.insert("purchases", values=(controller.user_id, item, quantity_ef, unity, now))
 
         if quantity:
             if unity:
@@ -281,19 +281,30 @@ def groceries_list(message, **fields):
         qtd = int(round(delta_now / u - float(item[-1]["quantity"]), 0))
         if qtd > 0:
             answer += f"\n- {qtd}"
-            db.cursor.execute(
-                f"""SELECT unity, AVG(CAST(quantity AS DECIMAL)) FROM purchases WHERE item = '{item_name}' GROUP BY unity"""
-            )
-            r = db.cursor.fetchall()
-            unity = None
-            diff = float("inf")
-            for u, m in r:
-                if abs(qtd - m) < diff:
-                    unity = u
+            unity = estimate_unity(controller.user_id, item_name, qtd)
             if unity and unity != "None" and unity is not None:
                 answer += f" {unity} de"
             answer += f" {item_name}"
 
+    db.cursor.execute(
+        f"""
+        SELECT
+            item, quantity, unity FROM shopping_list 
+        WHERE
+            telegram_id='{controller.user_id}'
+        ORDER BY datetime ASC"""
+    )
+    r = db.cursor.fetchall()
+
+    if len(r) > 0:
+        answer += "\n\ne aqui está sua lista de compras:\n"
+
+        for item_name, quantity, unity in r:
+            if quantity and quantity != "None" and float(quantity) > 0:
+                answer += f"\n- {quantity}"
+                if unity and unity != "None":
+                    answer += f" {unity} de"
+                answer += f" {item_name}"
     answers.append(("msg", answer))
     return answers
 

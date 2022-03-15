@@ -32,3 +32,15 @@ def find_product(product_name, user_id):
         if clear_product_name(name) == clear_product_name(product_name):
             return name
     return product_name
+
+
+def estimate_unity(user_id, product_name, quantity):
+    quantity = float(quantity)
+    cursor.execute(f"""SELECT unity, AVG(CAST(quantity AS DECIMAL)) FROM purchases WHERE item = '{product_name}' GROUP BY unity""")
+    r = cursor.fetchall()
+    unity = None
+    diff = float("inf")
+    for u, m in r:
+        if abs(quantity - float(m)) < diff:
+            unity = u
+    return unity
