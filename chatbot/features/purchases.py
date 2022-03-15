@@ -41,6 +41,6 @@ def estimate_unity(user_id, product_name, quantity):
     unity = None
     diff = float("inf")
     for u, m in r:
-        if abs(quantity - m) < diff:
+        if abs(quantity - float(m)) < diff:
             unity = u
     return unity
