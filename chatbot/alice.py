@@ -300,7 +300,7 @@ def groceries_list(message, **fields):
         answer += "\n\ne aqui está sua lista de compras:\n"
 
         for item_name, quantity, unity in r:
-            if float(quantity) > 0:
+            if quantity and quantity != "None" and float(quantity) > 0:
                 answer += f"\n- {quantity}"
                 if unity and unity != "None":
                     answer += f" {unity} de"
