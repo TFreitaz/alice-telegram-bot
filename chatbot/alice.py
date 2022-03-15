@@ -15,7 +15,7 @@ from utils.datetime_tools import fromisoformat, local2utc, next_weekday, utc2loc
 
 from chatbot.controller import Controller
 from chatbot.utils import remove_comms, clear_text, get_link, flip_coin
-from chatbot.features.purchases import find_product
+from chatbot.features.purchases import find_product, estimate_unity
 
 # from utils.image_tools import cartoon_generator
 
@@ -283,15 +283,7 @@ def groceries_list(message, **fields):
         qtd = int(round(delta_now / u - float(item[-1]["quantity"]), 0))
         if qtd > 0:
             answer += f"\n- {qtd}"
-            db.cursor.execute(
-                f"""SELECT unity, AVG(CAST(quantity AS DECIMAL)) FROM purchases WHERE item = '{item_name}' GROUP BY unity"""
-            )
-            r = db.cursor.fetchall()
-            unity = None
-            diff = float("inf")
-            for u, m in r:
-                if abs(qtd - m) < diff:
-                    unity = u
+            unity = estimate_unity(controller.user_id, item, qtd)
             if unity and unity != "None" and unity is not None:
                 answer += f" {unity} de"
             answer += f" {item_name}"
