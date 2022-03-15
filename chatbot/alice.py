@@ -288,6 +288,25 @@ def groceries_list(message, **fields):
                 answer += f" {unity} de"
             answer += f" {item_name}"
 
+    db.cursor.execute(
+        f"""
+        SELECT
+            item, quantity, unity FROM purchases 
+        WHERE
+            telegram_id='{controller.user_id}'
+        ORDER BY datetime ASC"""
+    )
+    r = db.cursor.fetchall()
+
+    if len(r) > 0:
+        answer += "\n\ne aqui está sua lista de compras:\n"
+
+        for item_name, quantity, unity in r:
+            if quantity > 0:
+                answer += f"\n- {quantity}"
+                if unity and unity != "None":
+                    answer += f" {unity} de"
+                answer += f" {item_name}"
     answers.append(("msg", answer))
     return answers
 
