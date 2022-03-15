@@ -35,6 +35,7 @@ def find_product(product_name, user_id):
 
 
 def estimate_unity(user_id, product_name, quantity):
+    quantity = float(quantity)
     cursor.execute(f"""SELECT unity, AVG(CAST(quantity AS DECIMAL)) FROM purchases WHERE item = '{product_name}' GROUP BY unity""")
     r = cursor.fetchall()
     unity = None
