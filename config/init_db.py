@@ -46,6 +46,10 @@ if "notes" not in tables:
     print("Criando tabela notes")
     cursor.execute("CREATE TABLE notes(telegram_id varchar, bucket varchar, note varchar, datetime TIMESTAMP);")
 
+if "shopping_list" not in tables:
+    print("Criando tabela shopping_list")
+    cursor.execute("CREATE TABLE shopping_list(telegram_id varchar, k item varchar, quantity varchar, unity varchar, datetime TIMESTAMP);")
+
 print("SALVANDO ALTERAÇÕES...")
 conn.commit()
 print("BANCO DE DADOS CRIADO!")
