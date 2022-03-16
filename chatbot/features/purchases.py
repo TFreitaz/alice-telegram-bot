@@ -35,6 +35,7 @@ def find_product(product_name, user_id):
 
 
 def update_shopping_list(user_id, product_name, quantity, unity):
+    quantity = float(quantity)
     cursor.execute(f"""SELECT item, quantity, unity FROM shopping_list WHERE telegram_id = '{user_id}'""")
     for item_name, item_quantity, item_unity in cursor.fetchall():
         if clear_product_name(product_name) == clear_product_name(item_name):
