@@ -15,7 +15,7 @@ from utils.datetime_tools import fromisoformat, local2utc, next_weekday, utc2loc
 
 from chatbot.controller import Controller
 from chatbot.utils import remove_comms, clear_text, get_link, flip_coin
-from chatbot.features.purchases import find_product, estimate_unity
+from chatbot.features.purchases import find_product, estimate_unity, update_shopping_list
 
 # from utils.image_tools import cartoon_generator
 
@@ -178,6 +178,8 @@ def purchase_registry(message, **fields):
         unity = s.group(6)
 
         db.insert("purchases", values=(controller.user_id, item, quantity_ef, unity, now))
+
+        update_shopping_list(controller.user_id, item, quantity_ef, unity)
 
         if quantity:
             if unity:
