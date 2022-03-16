@@ -274,11 +274,11 @@ def groceries_list(message, **fields):
         #         unities[unity] = []
         #     unities[unity].append(purchase["quantity"])
         # common_unity = max(unities, key=lambda x: len(unities.get(x)))
-        mean_quantity = np.mean([purchase["quantity"] for purchase in item])
-        default_quantity = mean_quantity
+        # mean_quantity = np.mean([float(purchase["quantity"]) for purchase in item])
+        # default_quantity = mean_quantity
         for i in range(len(item)):
             if item[i]["quantity"] == "None":
-                item[i]["quantity"] = default_quantity
+                item[i]["quantity"] = 1
             # if item[i]["unity"] == "None":
             #     item[i]["unity"] = common_unity
             #     if item[i]["quantity"] == 1:
