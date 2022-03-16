@@ -269,7 +269,8 @@ def groceries_list(message, **fields):
         item = items[item_name]
         unities = {}
         for purchase in item:
-            if (unity := purchase["unity"]) not in unities:
+            unity = purchase["unity"]
+            if unity not in unities:
                 unities[unity] = []
             unities[unity].append(purchase["quantity"])
         common_unity = max(unities, key=lambda x: len(unities.get(x)))
