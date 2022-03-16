@@ -48,6 +48,8 @@ def update_shopping_list(user_id, product_name, quantity, unity):
                     )
                 else:
                     cursor.execute(f"""DELETE FROM shopping_list WHERE telegram_id = '{user_id}' and item = '{item_name}'""")
+                conn.commit()
+                break
 
 
 def estimate_unity(user_id, product_name, quantity):
