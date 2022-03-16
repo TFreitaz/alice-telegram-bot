@@ -267,10 +267,19 @@ def groceries_list(message, **fields):
         if len(items[item_name]) <= 1:
             continue
         item = items[item_name]
-        unity = None
+        unities = {}
+        for purchase in item:
+            if (unity := purchase["unity"]) not in unities:
+                unities[unity] = []
+            unities[unity].append(purchase["quantity"])
+        common_unity = max(unities, key=lambda x: len(unities.get(x)))
         for i in range(len(item)):
             if item[i]["quantity"] == "None":
                 item[i]["quantity"] = 1
+            if item[i]["unity"] == "None":
+                item[i]["unity"] = common_unity
+                if item[i]["quantity"] == 1:
+                    item[i]["quantity"] = np.mean(unities[common_unity])
         for i in range(1, len(item)):
             delta_date = (item[i]["date"] - item[i - 1]["date"]).days
             q = float(item[i - 1]["quantity"])
