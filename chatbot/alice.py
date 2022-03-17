@@ -15,7 +15,7 @@ from utils.datetime_tools import fromisoformat, local2utc, next_weekday, utc2loc
 
 from chatbot.controller import Controller
 from chatbot.utils import remove_comms, clear_text, get_link, flip_coin
-from chatbot.features.purchases import find_product, estimate_unity
+from chatbot.features.purchases import find_product, estimate_unity, update_shopping_list
 
 # from utils.image_tools import cartoon_generator
 
@@ -127,7 +127,7 @@ def root_shopping_list_registry(message, **fields):
     answer = "Foram adicionados à lista:"
 
     for s in itermsg:
-        item = find_product(s.group(1).lower(), controller.user_id)
+        item = find_product(s.group(1), controller.user_id)
         quantity = s.group(4)
         quantity_ef = quantity if quantity is not None else 1
         unity = s.group(6)
@@ -172,12 +172,14 @@ def purchase_registry(message, **fields):
     answer = f"Foram comprados no dia {now_str}:"
 
     for s in itermsg:
-        item = find_product(s.group(1).lower(), controller.user_id)
+        item = find_product(s.group(1), controller.user_id)
         quantity = s.group(4)
         quantity_ef = quantity if quantity is not None else 1
         unity = s.group(6)
 
         db.insert("purchases", values=(controller.user_id, item, quantity_ef, unity, now))
+
+        update_shopping_list(controller.user_id, item, quantity_ef, unity)
 
         if quantity:
             if unity:
@@ -265,10 +267,22 @@ def groceries_list(message, **fields):
         if len(items[item_name]) <= 1:
             continue
         item = items[item_name]
-        unity = None
+        # unities = {}
+        # for purchase in item:
+        #     unity = purchase["unity"]
+        #     if unity not in unities:
+        #         unities[unity] = []
+        #     unities[unity].append(purchase["quantity"])
+        # common_unity = max(unities, key=lambda x: len(unities.get(x)))
+        # mean_quantity = np.mean([float(purchase["quantity"]) for purchase in item])
+        # default_quantity = mean_quantity
         for i in range(len(item)):
             if item[i]["quantity"] == "None":
                 item[i]["quantity"] = 1
+            # if item[i]["unity"] == "None":
+            #     item[i]["unity"] = common_unity
+            #     if item[i]["quantity"] == 1:
+            #         item[i]["quantity"] = np.mean(unities[common_unity])
         for i in range(1, len(item)):
             delta_date = (item[i]["date"] - item[i - 1]["date"]).days
             q = float(item[i - 1]["quantity"])
