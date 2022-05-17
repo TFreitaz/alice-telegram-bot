@@ -53,12 +53,15 @@ def update_shopping_list(user_id, product_name, quantity, unity):
 
 
 def estimate_unity(user_id, product_name, quantity):
-    quantity = float(quantity)
-    cursor.execute(f"""SELECT unity, AVG(CAST(quantity AS DECIMAL)) FROM purchases WHERE item = '{product_name}' GROUP BY unity""")
-    r = cursor.fetchall()
-    unity = None
-    diff = float("inf")
-    for u, m in r:
-        if abs(quantity - float(m)) < diff:
-            unity = u
-    return unity
+    try:
+        quantity = float(quantity)
+        cursor.execute(f"""SELECT unity, AVG(CAST(quantity AS DECIMAL)) FROM purchases WHERE item = '{product_name}' GROUP BY unity""")
+        r = cursor.fetchall()
+        unity = None
+        diff = float("inf")
+        for u, m in r:
+            if abs(quantity - float(m)) < diff:
+                unity = u
+        return unity
+    except Exception:
+        return None

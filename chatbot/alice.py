@@ -153,6 +153,7 @@ def root_shopping_list_registry(message, **fields):
     user_inputs=["item 1 (quantidade)", "item 2 (quantidade)", "item 3 (quantidade)"],
 )
 def purchase_registry(message, **fields):
+    
     answers = []
 
     db = HerokuDB()
