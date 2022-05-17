@@ -55,7 +55,9 @@ def update_shopping_list(user_id, product_name, quantity, unity):
 def estimate_unity(user_id, product_name, quantity):
     try:
         quantity = float(quantity)
-        cursor.execute(f"""SELECT unity, AVG(CAST(quantity AS DECIMAL)) FROM purchases WHERE item = '{product_name}' GROUP BY unity""")
+        cursor.execute(
+            f"""SELECT unity, AVG(CAST(quantity AS DECIMAL)) FROM purchases WHERE item = '{product_name}' GROUP BY unity"""
+        )
         r = cursor.fetchall()
         unity = None
         diff = float("inf")
@@ -64,4 +66,6 @@ def estimate_unity(user_id, product_name, quantity):
                 unity = u
         return unity
     except Exception:
+        conn = psycopg2.connect(HEROKU_DB_URL)
+        cursor = conn.cursor()
         return None
